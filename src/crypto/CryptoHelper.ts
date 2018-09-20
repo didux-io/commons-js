@@ -1,6 +1,5 @@
 import * as forge from "node-forge";
 import * as base32 from "hi-base32";
-declare const sjcl: any;
 
 export class CryptoHelper {
     private md256;
