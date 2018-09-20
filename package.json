@@ -1,0 +1,27 @@
+{
+  "name": "smilo-commons-js",
+  "version": "1.0.0",
+  "description": "The Smilo Commons Javascript library exposes commonly used Smilo functionality for integration in other projects.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Smilo-platform/Smilo-Commons-JS.git"
+  },
+  "author": "Smilo Platform",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Smilo-platform/Smilo-Commons-JS/issues"
+  },
+  "homepage": "https://github.com/Smilo-platform/Smilo-Commons-JS#readme",
+  "dependencies": {
+    "@types/big.js": "^4.0.5",
+    "@types/jasmine": "^2.8.8",
+    "big.js": "^5.1.2",
+    "jasmine": "^3.1.0",
+    "karma": "^2.0.4",
+    "karma-jasmine": "^1.1.2",
+    "threads": "^0.12.0"
+  }
+}
