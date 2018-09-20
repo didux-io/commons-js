@@ -1,13 +1,19 @@
 import { MerkleTree } from "./MerkleTree";
-import { IKeyStoreService } from "../../services/key-store-service/key-store-service";
 import { MERKLE_TREE_VERSION } from "./MerkleTreeVersion";
 import { IMerkleTreeConfig } from "./IMerkleTreeConfig";
-import { ILocalWallet } from "../../models/ILocalWallet";
-import { Storage } from "@ionic/storage";
 import { MerkleTreeHelper } from "./MerkleTreeHelper";
+import { EncryptionHelper } from "../keystore/EncryptionHelper";
+import { IStorageManager } from "../storage/IStorageManager";
+import { ILocalWallet } from "../wallet/ILocalWallet";
 
 export class MerkleTreeSerializer {
-    serialize(merkleTree: MerkleTree, wallet: ILocalWallet, storage: Storage, keyStoreService: IKeyStoreService, password: string): Promise<void> {
+    private encryptionHelper: EncryptionHelper;
+
+    constructor(private storageManager: IStorageManager) {
+
+    }
+
+    serialize(merkleTree: MerkleTree, wallet: ILocalWallet, password: string): Promise<void> {
         let promises: Promise<void>[] = [];
 
         let config: IMerkleTreeConfig = {
@@ -16,20 +22,20 @@ export class MerkleTreeSerializer {
         };
 
         promises.push(
-            storage.set(MerkleTreeHelper.getConfigStorageKey(wallet), config)
+            this.storageManager.writeJSON(MerkleTreeHelper.getConfigStorageKey(wallet), config)
         );
 
         let layerStorageKeys = MerkleTreeHelper.getLayerStorageKeys(wallet, merkleTree.layers.length);
         for(let i = 0; i < merkleTree.layers.length; i++) {
             let layer = merkleTree.layers[i];
 
-            let encrypted = keyStoreService.createKeyStore(
+            let encrypted = this.encryptionHelper.createKeyStore(
                 JSON.stringify(layer),
                 password
             );
 
             promises.push(
-                storage.set(layerStorageKeys[i], encrypted)
+                this.storageManager.writeJSON(layerStorageKeys[i], encrypted)
             );
         }
 

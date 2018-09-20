@@ -1,5 +1,5 @@
-import { ITransaction } from "../../models/ITransaction";
 import { CryptoHelper } from "../crypto/CryptoHelper";
+import { ITransaction } from "./ITransaction";
 
 export class TransactionHelper {
     private cryptoHelper = new CryptoHelper();
