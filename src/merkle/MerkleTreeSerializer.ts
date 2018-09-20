@@ -7,9 +7,8 @@ import { IStorageManager } from "../storage/IStorageManager";
 import { ILocalWallet } from "../wallet/ILocalWallet";
 
 export class MerkleTreeSerializer {
-    private encryptionHelper: EncryptionHelper;
-
-    constructor(private storageManager: IStorageManager) {
+    constructor(private storageManager: IStorageManager,
+                private encryptionHelper: EncryptionHelper = new EncryptionHelper()) {
 
     }
 

@@ -1,6 +1,6 @@
 import { TransactionHelper } from "./TransactionHelper";
-import { ITransaction } from "../../models/ITransaction";
 import { FixedBigNumber } from "../big-number/FixedBigNumber";
+import { ITransaction } from "./ITransaction";
 
 interface ITransactionHelperToStringTestVector {
     transaction: ITransaction;

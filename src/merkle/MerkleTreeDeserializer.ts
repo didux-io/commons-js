@@ -7,9 +7,8 @@ import { EncryptionHelper } from "../keystore/EncryptionHelper";
 import { ILocalWallet } from "../wallet/ILocalWallet";
 
 export class MerkleTreeDeserializer {
-    private encryptionHelper: EncryptionHelper = new EncryptionHelper();
-
-    constructor(private storageManager: IStorageManager) {
+    constructor(private storageManager: IStorageManager,
+                private encryptionHelper: EncryptionHelper = new EncryptionHelper()) {
 
     }
 

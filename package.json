@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "The Smilo Commons Javascript library exposes commonly used Smilo functionality for integration in other projects.",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha -r ts-node/register \"./src/**/*.spec.ts\""
   },
   "repository": {
     "type": "git",
@@ -23,7 +23,11 @@
     "jasmine": "^3.1.0",
     "karma": "^2.0.4",
     "karma-jasmine": "^1.1.2",
+    "mocha": "^5.2.0",
     "node-forge": "^0.7.6",
-    "threads": "^0.12.0"
+    "seedrandom": "^2.4.4",
+    "threads": "^0.12.0",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.0.3"
   }
 }
