@@ -157,39 +157,4 @@ describe("CryptoHelper", () => {
             expect(cryptoHelper.sha256Base32Short(test.data)).toBe(test.output);
         }
     });
-    
-    it("should set isInitialized to true if it hasn't been initialized yet", () => {
-        spyOn(cryptoHelper, <any>"initialize").and.callThrough();
-        spyOn(sjcl.codec.base64, "fromBits");
-        spyOn(sjcl.codec.bytes, "fromBits").and.returnValue("");
-        (<any>cryptoHelper).md512 = {
-            update() {},
-            finalize() {},
-            reset() {}
-        };
-        (<any>cryptoHelper).md256 = {
-            update() {},
-            finalize() {},
-            reset() {}
-        };
-
-        cryptoHelper.sha512("");
-        expect((<any>cryptoHelper).isInitialized).toBeTruthy();
-
-        (<any>cryptoHelper).isInitialized = false;
-        cryptoHelper.sha256Binary("");
-        expect((<any>cryptoHelper).isInitialized).toBeTruthy();
-
-        (<any>cryptoHelper).isInitialized = false;
-        cryptoHelper.sha256("");
-        expect((<any>cryptoHelper).isInitialized).toBeTruthy();
-
-        (<any>cryptoHelper).isInitialized = false;
-        cryptoHelper.sha256Hex("");
-        expect((<any>cryptoHelper).isInitialized).toBeTruthy();
-
-        (<any>cryptoHelper).isInitialized = false;
-        cryptoHelper.sha256Base32Short("");
-        expect((<any>cryptoHelper).isInitialized).toBeTruthy();
-    });
 });
