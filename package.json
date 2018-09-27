@@ -2,8 +2,11 @@
   "name": "smilo-commons-js",
   "version": "1.0.0",
   "description": "The Smilo Commons Javascript library exposes commonly used Smilo functionality for integration in other projects.",
+  "main": "index.js",
   "scripts": {
-    "test": "ts-node node_modules/jasmine/bin/jasmine"
+    "build": "tsc && npm run webpack && ./examples/copy-scripts.sh",
+    "test": "ts-node node_modules/jasmine/bin/jasmine",
+    "webpack": "npx webpack"
   },
   "repository": {
     "type": "git",
