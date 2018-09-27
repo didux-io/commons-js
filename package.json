@@ -16,18 +16,22 @@
   },
   "homepage": "https://github.com/Smilo-platform/Smilo-Commons-JS#readme",
   "dependencies": {
-    "@types/big.js": "^4.0.5",
-    "@types/jasmine": "^2.8.8",
-    "@types/node": "^10.10.1",
     "big.js": "^5.1.2",
     "hi-base32": "^0.5.0",
-    "jasmine": "^3.1.0",
-    "jasmine-spec-reporter": "^4.2.1",
     "node-forge": "^0.7.6",
     "seedrandom": "^2.4.4",
     "sjcl": "^1.0.7",
-    "threads": "^0.12.0",
+    "threads": "^0.12.0"
+  },
+  "devDependencies": {
+    "@types/big.js": "^4.0.5",
+    "@types/jasmine": "^2.8.8",
+    "@types/node": "^10.10.1",
+    "jasmine": "^3.1.0",
+    "jasmine-spec-reporter": "^4.2.1",
     "ts-node": "^7.0.1",
-    "typescript": "^3.0.3"
+    "typescript": "^3.0.3",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.1"
   }
 }
