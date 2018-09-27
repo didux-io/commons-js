@@ -1,10 +1,25 @@
 const path = require("path");
 
 module.exports = (env) => {
+    let module = {
+        rules: [
+            {
+                test: /\.tsx?$/,
+                use: 'ts-loader',
+                exclude: /node_modules/
+            }
+        ]
+    };
+    let resolve = {
+        extensions: ['.tsx', '.ts', '.js']
+    };
+
     return [
         // Web
         {
-            entry: "./build/index.js",
+            entry: "./src/index.ts",
+            module: module,
+            resolve: resolve,
             output: {
                 libraryTarget: "window",
                 library: "Smilo",
@@ -14,7 +29,9 @@ module.exports = (env) => {
         },
         // Node
         {
-            entry: "./build/index.js",
+            entry: "./src/index.ts",
+            module: module,
+            resolve: resolve,
             output: {
                 libraryTarget: "var",
                 library: "Smilo",
