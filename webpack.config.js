@@ -1,10 +1,13 @@
 const path = require("path");
+const fs = require("fs-extra");
+const CompileInfoPlugin = require("./webpack-plugins/CompileInfoPlugin");
 
 module.exports = (env) => {
     env = env || {};
     let mode = env.MODE || "development";
     let watch = env.WATCH == "true";
 
+    // Define shared module definition
     let module = {
         rules: [
             {
@@ -14,6 +17,8 @@ module.exports = (env) => {
             }
         ]
     };
+
+    // Define shared resolve definition
     let resolve = {
         extensions: ['.tsx', '.ts', '.js']
     };
@@ -25,6 +30,13 @@ module.exports = (env) => {
             module: module,
             resolve: resolve,
             mode: mode,
+            stats: "errors-only",
+            plugins: [
+                new CompileInfoPlugin("Web", () => {
+                    // Copy output to example folders
+                    fs.copySync("./dist/smilo-web.js", "./examples/web/smilo-web.js");
+                })
+            ],
             output: {
                 libraryTarget: "window",
                 library: "Smilo",
@@ -39,6 +51,13 @@ module.exports = (env) => {
             module: module,
             resolve: resolve,
             mode: mode,
+            stats: "errors-only",
+            plugins: [
+                new CompileInfoPlugin("Node", () => {
+                    // Copy output to example folders
+                    fs.copySync("./dist/smilo-node.js", "./examples/node/smilo-node.js");
+                })
+            ],
             output: {
                 libraryTarget: "var",
                 library: "Smilo",
