@@ -24,6 +24,19 @@ module.exports = (env) => {
         extensions: ['.tsx', '.ts', '.js']
     };
 
+    // Make sure all node_modules are marked as external
+    // for node builds. This is needed because otherwise
+    // they would be included in the single file output.
+    // This greatly confuses node libraries...
+    let nodeExternals = {};
+    fs.readdirSync('node_modules')
+        .filter(function (x) {
+            return ['.bin'].indexOf(x) === -1;
+        })
+        .forEach(function (mod) {
+            nodeExternals[mod] = 'commonjs ' + mod;
+        });
+
     return [
         // Web
         {
@@ -76,7 +89,8 @@ module.exports = (env) => {
                 filename: "smilo-node.js",
                 path: path.resolve(__dirname, "dist")
             },
-            watch: watch
+            watch: watch,
+            externals: nodeExternals
         }
     ]
 }
