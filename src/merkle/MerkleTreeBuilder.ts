@@ -4,6 +4,7 @@ import { CryptoHelper } from "../crypto/CryptoHelper";
 import { MerkleTree } from "./MerkleTree";
 import { IPRNG } from "../random/IPRNG";
 import { SHA1PRNG } from "../random/SHA1PRNG";
+import { PlatformHelper } from "../platform/PlatformHelper";
 
 declare const safari: any;
 
@@ -12,8 +13,8 @@ export class MerkleTreeBuilder {
 
     private cryptoHelper = new CryptoHelper();
 
-    generate(privateKey: string, layerCount: number, isAndroid: boolean, isIos: boolean, progressUpdate?: (progress: number) => void): Promise<MerkleTree> {
-        return this.generateLeafKeys(privateKey, layerCount, isAndroid, isIos, progressUpdate).then(
+    generate(privateKey: string, layerCount: number, progressUpdate?: (progress: number) => void): Promise<MerkleTree> {
+        return this.generateLeafKeys(privateKey, layerCount, progressUpdate).then(
             (publicKeys) => {
                 return new MerkleTree(this.generateLayers(publicKeys, layerCount));
             }
@@ -52,40 +53,48 @@ export class MerkleTreeBuilder {
         return new SHA1PRNG(seed);
     }
 
-    generateLeafKeys(privateKey: string, layerCount: number, isAndroid: boolean, isIos:boolean, progressUpdate?: (progress: number) => void): Promise<string[]> {
+    generateLeafKeys(privateKey: string, layerCount: number, progressUpdate?: (progress: number) => void): Promise<string[]> {
         return new Promise((resolve, reject) => {
             let totalKeys = Math.pow(2, layerCount - 1);
 
             let scripts: string[];
-            if(isAndroid) {
+            if(PlatformHelper.getInstance().isAndroid()) {
                 // Android requires the scripts to be loaded as shown below.
                 scripts = [
                     `file:///android_asset/www/assets/scripts/sjcl.js`,
                     `file:///android_asset/www/assets/scripts/SHA1PRNG.js`,
                     `file:///android_asset/www/assets/scripts/LamportGenerator.js`
                 ];
-            } else if (isIos) {
+            }
+            else if (PlatformHelper.getInstance().isIos()) {
                 // iOS requires the scripts to be loaded as shown below.
                 scripts = [
                     `${ window.location.href.replace("/index.html", "") }/assets/scripts/sjcl.js`,
                     `${ window.location.href.replace("/index.html", "") }/assets/scripts/SHA1PRNG.js`,
                     `${ window.location.href.replace("/index.html", "") }/assets/scripts/LamportGenerator.js`
                 ];
-            } else if (window.location.protocol.includes("safari-extension:")) {
+            }
+            else if(PlatformHelper.getInstance().isNode()) {
+                // On NodeJS scripts are loaded by the worker itself.
+                scripts = [];
+            }
+            else if (window.location.protocol.includes("safari-extension:")) {
                 // Safari requires the scripts to be loaded as shown below.
                 scripts = [
                     `${ safari.extension.baseURI }assets/scripts/sjcl.js`,
                     `${ safari.extension.baseURI }assets/scripts/SHA1PRNG.js`,
                     `${ safari.extension.baseURI }assets/scripts/LamportGenerator.js`
                 ];
-            } else if (window.location.protocol.includes("extension")) {
+            }
+            else if (window.location.protocol.includes("extension")) {
                 // Browser extensions requires the scripts to be loaded as shown below
                 scripts = [
                     `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/sjcl.js`,
                     `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/SHA1PRNG.js`,
                     `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/LamportGenerator.js`
                 ];
-            } else {
+            }
+            else {
                 // Web requires the scripts to be loaded as shown below.
                 scripts = [
                     `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,

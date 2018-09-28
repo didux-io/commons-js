@@ -1,3 +1,4 @@
+const webpack = require("webpack");
 const path = require("path");
 const fs = require("fs-extra");
 const CompileInfoPlugin = require("./webpack-plugins/CompileInfoPlugin");
@@ -27,6 +28,7 @@ module.exports = (env) => {
         // Web
         {
             entry: "./src/index.ts",
+            target: "web",
             module: module,
             resolve: resolve,
             mode: mode,
@@ -35,6 +37,11 @@ module.exports = (env) => {
                 new CompileInfoPlugin("Web", () => {
                     // Copy output to example folders
                     fs.copySync("./dist/smilo-web.js", "./examples/web/smilo-web.js");
+                }),
+                new webpack.DefinePlugin({
+                    "process.env": {
+                        TARGET: "'web'"
+                    }
                 })
             ],
             output: {
@@ -48,6 +55,7 @@ module.exports = (env) => {
         // Node
         {
             entry: "./src/index.ts",
+            target: "node",
             module: module,
             resolve: resolve,
             mode: mode,
@@ -56,11 +64,15 @@ module.exports = (env) => {
                 new CompileInfoPlugin("Node", () => {
                     // Copy output to example folders
                     fs.copySync("./dist/smilo-node.js", "./examples/node/smilo-node.js");
+                }),
+                new webpack.DefinePlugin({
+                    "process.env": {
+                        TARGET: "'node'"
+                    }
                 })
             ],
             output: {
-                libraryTarget: "var",
-                library: "Smilo",
+                libraryTarget: "commonjs",
                 filename: "smilo-node.js",
                 path: path.resolve(__dirname, "dist")
             },
