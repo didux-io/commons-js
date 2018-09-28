@@ -1,10 +1,10 @@
 import { MerkleTreeBuilder } from "./MerkleTreeBuilder";
 import { MerkleTree } from "./MerkleTree";
-import { MockThreadPool } from "../../../test-config/mocks/MockThreadPool";
 import { SeededRandom } from "../random/SeededRandom";
 import { ILamportGeneratorThreadInput, ILamportGeneratorThreadOutput, LamportGeneratorThread } from "./LamportGeneratorThread";
 import { CryptoHelper } from "../crypto/CryptoHelper";
 import { ThreadPool } from "./ThreadPool";
+import { MockThreadPool } from "../../mocks/MockThreadPool";
 
 describe("MerkleTreeBuilder", () => {
     let builder: MerkleTreeBuilder;

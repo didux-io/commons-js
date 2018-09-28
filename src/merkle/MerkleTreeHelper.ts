@@ -1,4 +1,4 @@
-import { IWallet } from "../../models/IWallet";
+import { IWallet } from "../wallet/IWallet";
 
 export class MerkleTreeHelper {
     private constructor() {}

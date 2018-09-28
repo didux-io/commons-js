@@ -1,4 +1,5 @@
-declare const sjcl: any;
+import * as forge from "node-forge";
+import * as base32 from "hi-base32";
 
 export class CryptoHelper {
     private md256;
@@ -6,8 +7,8 @@ export class CryptoHelper {
     private isInitialized: boolean = false;
 
     private initialize() {
-        this.md256 = new sjcl.hash.sha256();
-        this.md512 = new sjcl.hash.sha512();
+        this.md256 = forge.md.sha256.create();
+        this.md512 = forge.md.sha512.create();
         this.isInitialized = true;
     }
 
@@ -17,11 +18,11 @@ export class CryptoHelper {
 
         this.md512.update(data);
 
-        let hashedData = this.md512.finalize();
+        let hashedData = this.md512.digest().toHex();
 
-        this.md512.reset();
+        this.md512.start();
 
-        return sjcl.codec.base64.fromBits(hashedData);
+        return forge.util.encode64(forge.util.hexToBytes(hashedData));
     }
 
     sha256Short(data: string): string {
@@ -37,20 +38,19 @@ export class CryptoHelper {
         // convert to a bit string.
         this.md256.update(data);
 
-        let hashedData = this.md256.finalize();
+        let hashedData = this.md256.digest();
 
-        this.md256.reset();
+        this.md256.start();
 
-        let bytes = sjcl.codec.bytes.fromBits(hashedData);
+        let bytes = forge.util.createBuffer(hashedData, "raw");
 
         let bitString = "";
-
-        for(let i = 0; i < bytes.length; i++) {
-            let byte = bytes[i];
+        while(bytes.length() > 0) {
+            let byte = bytes.getByte();
             let bits:string = byte.toString(2);
 
             // Pad with exta zeros if needed
-            if(i > 0)
+            if(bitString.length > 0)
                 bitString += (<any>bits).padStart(8, "0");
             else
                 bitString += bits;
@@ -65,11 +65,11 @@ export class CryptoHelper {
 
         this.md256.update(data);
 
-        let hashedData = this.md256.finalize();
+        let hashedData = this.md256.digest().toHex();
 
-        this.md256.reset();
+        this.md256.start();
 
-        return sjcl.codec.base64.fromBits(hashedData);
+        return forge.util.encode64(forge.util.hexToBytes(hashedData));
     }
 
     sha256Hex(data: string): string {
@@ -78,11 +78,11 @@ export class CryptoHelper {
 
         this.md256.update(data);
 
-        let hashedData = this.md256.finalize();
+        let hashedData = this.md256.digest().toHex();
 
-        this.md256.reset();
+        this.md256.start();
 
-        return sjcl.codec.hex.fromBits(hashedData);
+        return hashedData;
     }
 
     sha256Base32Short(data: string): string {
@@ -91,10 +91,16 @@ export class CryptoHelper {
 
         this.md256.update(data);
 
-        let hashedData = this.md256.finalize();
+        let hashedData = this.md256.digest();
 
-        this.md256.reset();
+        this.md256.start();
 
-        return sjcl.codec.base32.fromBits(hashedData).substr(0, 32);
+        let buffer = forge.util.createBuffer(hashedData, "raw");
+        let bytes: number[] = [];
+        while(buffer.length() > 0) {
+            bytes.push(buffer.getByte());
+        }
+
+        return base32.encode(new Uint8Array(bytes)).substr(0, 32);
     }
 }

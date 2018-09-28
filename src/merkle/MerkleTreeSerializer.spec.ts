@@ -1,19 +1,20 @@
 import { MerkleTreeSerializer } from "./MerkleTreeSerializer";
 import { MerkleTree } from "./MerkleTree";
-import { Storage } from "@ionic/storage";
-import { IKeyStoreService } from "../../services/key-store-service/key-store-service";
-import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
-import { ILocalWallet } from "../../models/ILocalWallet";
+import { IStorageManager } from "../storage/IStorageManager";
+import { EncryptionHelper } from "../keystore/EncryptionHelper";
+import { MockStorageManager } from "../../mocks/MockStorageManager";
+import { ILocalWallet } from "../wallet/ILocalWallet";
 
 describe("MerkleTreeSerializer", () => {
     let serializer: MerkleTreeSerializer;
-    let storageService: Storage;
-    let keyStoreService: IKeyStoreService;
+    let storageManager: IStorageManager;
+    let encryptionHelper: EncryptionHelper;
 
     beforeEach(() => {
-        serializer = new MerkleTreeSerializer();
-        storageService = new Storage(null);
-        keyStoreService = new MockKeyStoreService();
+        storageManager = new MockStorageManager();
+        encryptionHelper = new EncryptionHelper();
+
+        serializer = new MerkleTreeSerializer(storageManager, encryptionHelper);
     })
 
     it("should serialize the Merkle Tree correctly", (done) => {
@@ -28,7 +29,7 @@ describe("MerkleTreeSerializer", () => {
             id: "WALLET_ID"
         };
 
-        spyOn(keyStoreService, "createKeyStore").and.callFake((data, password) => {
+        spyOn(encryptionHelper, "createKeyStore").and.callFake((data, password) => {
             // We parse the JSON string so we can determine which layer we are working on.
             // Next we return a simple object which we can use to validate the storage.set functionality.
             let parsed = JSON.parse(data);
@@ -42,7 +43,7 @@ describe("MerkleTreeSerializer", () => {
                     return {length: 1};
             }
         });
-        spyOn(storageService, "set").and.callFake((key, value) => {
+        spyOn(storageManager, "writeJSON").and.callFake((key, value) => {
             // Check if the key and value match
             switch(key) {
                 case("WALLET_ID-config"):
@@ -65,7 +66,7 @@ describe("MerkleTreeSerializer", () => {
             return Promise.resolve();
         });
 
-        serializer.serialize(merkleTree, dummyWallet, storageService, keyStoreService, "pass123").then(
+        serializer.serialize(merkleTree, dummyWallet, "pass123").then(
             () => {
                 done();
             },
