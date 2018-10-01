@@ -1,6 +1,5 @@
 import { IPRNG } from "./IPRNG";
-
-declare const sjcl;
+import * as forge from "node-forge";
 
 /**
  * Based on the SHA1PRNG algorithm developed by Sun.
@@ -14,26 +13,26 @@ export class SHA1PRNG implements IPRNG {
     private remCount: number = 0;
 
     constructor(seed?: any) {
-        if(seed)
+        if (seed)
             this.setSeed(seed);
     }
 
     setSeed(value: any): void {
-        if(value instanceof Uint8Array) {
+        if (value instanceof Uint8Array) {
             // Convert int arrays back to a normal number array
             let convertedValue: number[] = [];
 
-            for(let i = 0; i < value.length; i++) {
+            for (let i = 0; i < value.length; i++) {
                 convertedValue[i] = value[i];
             }
 
             value = convertedValue;
         }
-        else if(value instanceof Int8Array) {
+        else if (value instanceof Int8Array) {
             // Convert int arrays back to a normal number array
             let convertedValue: number[] = [];
 
-            for(let i = 0; i < value.length; i++) {
+            for (let i = 0; i < value.length; i++) {
                 convertedValue[i] = this.toUnsigned(value[i]);
             }
 
@@ -41,14 +40,37 @@ export class SHA1PRNG implements IPRNG {
         }
 
         // If we get an array encode it to an SJCL word array
-        if(Array.isArray(value))
-            value = sjcl.codec.bytes.toBits(value);
+        if (Array.isArray(value))
+            value = this.toByteBuffer(<any>value);
 
-        this.md1 = new sjcl.hash.sha1();
+        this.md1 = forge.md.sha1.create();
 
         this.md1.update(value);
 
-        this.state = sjcl.codec.bytes.fromBits(this.md1.finalize());
+        this.state = this.forgeShaToByteArray(this.md1.digest());
+
+        this.md1.start();
+    }
+
+    private toByteBuffer(bytes: Uint8Array): any {
+        let buffer = forge.util.createBuffer();
+
+        for(let i = 0; i < bytes.length; i++) {
+            buffer.putByte(bytes[i]);
+        }
+
+        return buffer.getBytes();
+    }
+
+    private forgeShaToByteArray(forgeSha: any): Uint8Array {
+        let buffer = forge.util.createBuffer(forgeSha, "raw");
+
+        let bytes: number[] = [];
+        while (buffer.length() > 0) {
+            bytes.push(buffer.getByte());
+        }
+
+        return new Uint8Array(bytes);
     }
 
     private next(bits: number): number {
@@ -56,7 +78,7 @@ export class SHA1PRNG implements IPRNG {
         let next = 0;
 
         let bytes = this.getRandomBytes(numBytes);
-        for(let i = 0; i < numBytes; i++) {
+        for (let i = 0; i < numBytes; i++) {
             next = (next << 8) + (bytes[i] & 0xFF);
         }
 
@@ -73,11 +95,11 @@ export class SHA1PRNG implements IPRNG {
         let r = this.next(31);
         let m = bound - 1;
 
-        if((bound & m) == 0) {
+        if ((bound & m) == 0) {
             r = ((bound * r) >> 31);
         }
         else {
-            for(let u = r; u - (r = u % bound) + m < 0; u = this.next(31)) {
+            for (let u = r; u - (r = u % bound) + m < 0; u = this.next(31)) {
                 // Do nothing
             }
         }
@@ -97,7 +119,7 @@ export class SHA1PRNG implements IPRNG {
         if (r > 0) {
             // How many bytes?
             todo = (result.length - index) < (this.DIGEST_SIZE - r) ?
-                        (result.length - index) : (this.DIGEST_SIZE - r);
+                (result.length - index) : (this.DIGEST_SIZE - r);
             // Copy the bytes, zero the buffer
             for (let i = 0; i < todo; i++) {
                 result[i] = output[r];
@@ -110,8 +132,9 @@ export class SHA1PRNG implements IPRNG {
         // If we need more bytes, make them.
         while (index < result.length) {
             // Step the state
-            this.md1.update(sjcl.codec.bytes.toBits(this.state));
-            output = sjcl.codec.bytes.fromBits(this.md1.finalize());
+            this.md1.update(this.toByteBuffer(this.state));
+            output = this.forgeShaToByteArray(this.md1.digest());
+            this.md1.start();
             this.updateState(this.state, output);
 
             // How many bytes?
@@ -156,10 +179,10 @@ export class SHA1PRNG implements IPRNG {
 
         // Make sure at least one bit changes!
         if (!zf) {
-           state[0]++;
+            state[0]++;
 
-           // Ensure state remains a byte value
-           state[0] %= 0xFF;
+            // Ensure state remains a byte value
+            state[0] %= 0xFF;
         }
     }
 
