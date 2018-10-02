@@ -1,6 +1,5 @@
 import { SHA1PRNG } from "../random/SHA1PRNG";
-
-declare const sjcl: any;
+import * as forge from "node-forge";
 
 export class LamportGenerator {
     private readonly CS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -18,8 +17,8 @@ export class LamportGenerator {
         this.count = count;
 
         this.publicKeys = [];
-        this.md256 = new sjcl.hash.sha256();
-        this.md512 = new sjcl.hash.sha512();
+        this.md256 = forge.md.sha256.create();
+        this.md512 = forge.md.sha512.create();
     }
 
     fill(): void {
@@ -92,22 +91,22 @@ export class LamportGenerator {
     }
 
     private sha512(data: string): string {
-        this.md512.update(sjcl.codec.utf8String.toBits(data));
+        this.md512.update(data);
 
-        let output = this.md512.finalize();
+        let output = this.md512.digest();
 
-        this.md512.reset();
+        this.md512.start();
 
-        return sjcl.codec.base64.fromBits(output);
+        return forge.util.encode64(output);
     }
 
     private sha256(data: string): string {
-        this.md256.update(sjcl.codec.utf8String.toBits(data));
+        this.md256.update(data);
 
-        let output = this.md256.finalize();
+        let output = this.md256.digest();
 
-        this.md256.reset();
+        this.md256.start();
 
-        return sjcl.codec.base64.fromBits(output);
+        return forge.util.encode64(output);
     }
 }
