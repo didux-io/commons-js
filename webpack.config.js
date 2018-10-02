@@ -35,7 +35,10 @@ module.exports = (env) => {
         })
         .forEach(function (mod) {
             nodeExternals[mod] = 'commonjs ' + mod;
-        });
+        }
+    );
+
+    let forgeSourceCode = fs.readFileSync("./node_modules/node-forge/dist/forge.min.js").toString();
 
     return [
         // Web
@@ -63,7 +66,10 @@ module.exports = (env) => {
                 filename: "smilo-web.js",
                 path: path.resolve(__dirname, "dist")
             },
-            watch: watch
+            watch: watch,
+            externals: {
+                "./LamportGeneratorThread": "LamportGeneratorThread"
+            }
         },
         // Node
         {
@@ -91,6 +97,36 @@ module.exports = (env) => {
             },
             watch: watch,
             externals: nodeExternals
+        },
+        // Worker for web
+        {
+            entry: "./src/merkle/LamportGeneratorThread.ts",
+            target: "webworker",
+            module: module,
+            resolve: resolve,
+            mode: mode,
+            stats: "errors-only",
+            plugins: [
+                new CompileInfoPlugin("WebWorker", () => {
+                    // Copy output to example folders
+                    fs.copySync("./dist/smilo-web-worker.js", "./examples/web/smilo-web-worker.js");
+                }),
+                new webpack.DefinePlugin({
+                    "process.env": {
+                        TARGET: "'web'"
+                    },
+                    LamportGeneratorCode: "class LamportGenerator{}",
+                    SHA1PRNGCode: "class SHA1PRNG{}",
+                    ForgeCode: forgeSourceCode
+                })
+            ],
+            output: {
+                libraryTarget: "window",
+                library: "LamportGeneratorThread",
+                filename: "smilo-web-worker.js",
+                path: path.resolve(__dirname, "dist")
+            },
+            watch: watch
         }
     ]
 }
