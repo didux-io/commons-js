@@ -4,9 +4,9 @@
   "description": "The Smilo Commons Javascript library exposes commonly used Smilo functionality for integration in other projects.",
   "main": "index.js",
   "scripts": {
-    "build": "npx webpack",
-    "build-watch": "npx webpack --env.WATCH=true",
-    "build-prod": "npx webpack --env.MODE=production ",
+    "build": "webpack",
+    "build-watch": "webpack --env.WATCH=true",
+    "build-prod": "webpack --env.MODE=production ",
     "test": "ts-node node_modules/jasmine/bin/jasmine"
   },
   "repository": {
