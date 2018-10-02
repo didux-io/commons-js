@@ -21,8 +21,8 @@ export class PlatformHelper {
      * @param platformType The platform type.
      */
     static initialize(platformType: PlatformType) {
-        if(PlatformHelper.instance)
-            throw new Error("PlatformHelper is already initialized");
+        // if(PlatformHelper.instance)
+        //     throw new Error("PlatformHelper is already initialized");
 
         PlatformHelper.instance = new PlatformHelper(platformType);
     }
@@ -41,5 +41,9 @@ export class PlatformHelper {
 
     isOther(): boolean {
         return this.platformType == "other";
+    }
+
+    getPlatformType(): PlatformType {
+        return this.platformType;
     }
 }
