@@ -5,6 +5,7 @@ import { ILamportGeneratorThreadInput, ILamportGeneratorThreadOutput, LamportGen
 import { CryptoHelper } from "../crypto/CryptoHelper";
 import { ThreadPool } from "./ThreadPool";
 import { MockThreadPool } from "../../mocks/MockThreadPool";
+import { PlatformHelper } from "../platform/PlatformHelper";
 
 describe("MerkleTreeBuilder", () => {
     let builder: MerkleTreeBuilder;
@@ -21,7 +22,7 @@ describe("MerkleTreeBuilder", () => {
         spyOn(builder, "generateLeafKeys").and.returnValue(Promise.resolve(["1", "2", "3", "4"]));
         spyOn(builder, "generateLayers").and.returnValue(layers);
 
-        builder.generate("PRIVATE_KEY", 2, true, true).then(
+        builder.generate("PRIVATE_KEY", 2).then(
             (merkleTree) => {
                 expect(merkleTree instanceof MerkleTree).toBeTruthy();
                 expect(merkleTree.layers).toBe(layers);
@@ -79,6 +80,9 @@ describe("MerkleTreeBuilder", () => {
     it("should generate the Merkle Tree leaf nodes correctly", (done) => {
         let pool = new MockThreadPool();
 
+        // Set platform to Android
+        PlatformHelper.initialize("android");
+
         // Spy on the method which creates a thread pool and return our mocked version.
         spyOn(builder, "createThreadPool").and.returnValue(pool);
 
@@ -130,7 +134,7 @@ describe("MerkleTreeBuilder", () => {
             }
         });
 
-        builder.generateLeafKeys("PRIVATE_KEY", 9, true, false).then(
+        builder.generateLeafKeys("PRIVATE_KEY", 9).then(
             (publicKeys) => {
                 let expectedPublicKeys: string[] = [];
                 for(let i = 0; i < 256; i++) {
@@ -151,6 +155,9 @@ describe("MerkleTreeBuilder", () => {
 
     it("should handle errors when generating the Merkle Tree leaf nodes correctly", (done) => {
         let pool = new MockThreadPool();
+
+        // Set platform to Android
+        PlatformHelper.initialize("android");
 
         // Spy on the method which creates a thread pool and return our mocked version.
         spyOn(builder, "createThreadPool").and.returnValue(pool);
@@ -178,7 +185,7 @@ describe("MerkleTreeBuilder", () => {
             pool.notifyErrorListeners({}, "Some error");
         });
 
-        builder.generateLeafKeys("PRIVATE_KEY", 9, true, false).then(
+        builder.generateLeafKeys("PRIVATE_KEY", 9).then(
             (publicKeys) => {
                 expect(true).toBeFalsy("Promise resolve should never be called");
 
@@ -196,6 +203,9 @@ describe("MerkleTreeBuilder", () => {
     it("should import the correct scripts on Android platforms", (done) => {
         let pool = new MockThreadPool();
 
+        // Set platform to Android
+        PlatformHelper.initialize("android");
+
         // Call through to mocked ThreadPool
         spyOn(pool, "run").and.callThrough();
 
@@ -206,7 +216,7 @@ describe("MerkleTreeBuilder", () => {
             pool.notifyErrorListeners(null, "this is meant to fail");
         });
 
-        builder.generateLeafKeys("PRIVATE_KEY", 9, true, false).then(
+        builder.generateLeafKeys("PRIVATE_KEY", 9).then(
             (publicKeys) => {
                 expect(true).toBe(false, "Promise resolve should never be called");
 
@@ -233,6 +243,9 @@ describe("MerkleTreeBuilder", () => {
     it("should import the correct scripts on non-Android platforms", (done) => {
         let pool = new MockThreadPool();
 
+        // Set platform to Android
+        PlatformHelper.initialize("node");
+
         // Call through to mocked ThreadPool
         spyOn(pool, "run").and.callThrough();
 
@@ -243,7 +256,7 @@ describe("MerkleTreeBuilder", () => {
             pool.notifyErrorListeners(null, "this is meant to fail");
         });
 
-        builder.generateLeafKeys("PRIVATE_KEY", 9, false, false).then(
+        builder.generateLeafKeys("PRIVATE_KEY", 9).then(
             (publicKeys) => {
                 expect(true).toBe(false, "Promise resolve should never be called");
 
@@ -255,11 +268,7 @@ describe("MerkleTreeBuilder", () => {
 
                 expect(pool.run).toHaveBeenCalledWith(
                     LamportGeneratorThread,
-                    [
-                        `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
-                        `${ window.location.protocol }//${ window.location.host }/assets/scripts/SHA1PRNG.js`,
-                        `${ window.location.protocol }//${ window.location.host }/assets/scripts/LamportGenerator.js`
-                    ]
+                    []
                 );
 
                 done();
@@ -271,12 +280,15 @@ describe("MerkleTreeBuilder", () => {
         let pool = new MockThreadPool();
         spyOn(builder, "createThreadPool").and.returnValue(pool);
 
+        // Set platform to Android
+        PlatformHelper.initialize("android");
+
         spyOn(pool, "send").and.callFake((job: ILamportGeneratorThreadInput) => {
             pool.notifyJobDoneListener({}, "");
             pool.notifyFinishedListener();
         });
 
-        builder.generateLeafKeys("PRIVATE_KEY", 2, true, true, (e) => {
+        builder.generateLeafKeys("PRIVATE_KEY", 2, (e) => {
             expect(e).toBe(0.99);
             done();
         });

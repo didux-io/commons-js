@@ -46,7 +46,7 @@ export class MerkleTreeBuilder {
     }
 
     createThreadPool(): IThreadPool {
-        return new ThreadPool();
+        return new ThreadPool(1);
     }
 
     createPRNG(seed): IPRNG {
@@ -61,15 +61,15 @@ export class MerkleTreeBuilder {
             if(PlatformHelper.getInstance().isAndroid()) {
                 // Android requires the scripts to be loaded as shown below.
                 scripts = [
-                    `file:///android_asset/www/assets/scripts/sjcl.js`,
+                    `file:///android_asset/www/assets/scripts/forge.js`,
                     `file:///android_asset/www/assets/scripts/SHA1PRNG.js`,
                     `file:///android_asset/www/assets/scripts/LamportGenerator.js`
                 ];
             }
-            else if (PlatformHelper.getInstance().isIos()) {
+            else if (typeof(window) !== undefined && PlatformHelper.getInstance().isIos()) {
                 // iOS requires the scripts to be loaded as shown below.
                 scripts = [
-                    `${ window.location.href.replace("/index.html", "") }/assets/scripts/sjcl.js`,
+                    `${ window.location.href.replace("/index.html", "") }/assets/scripts/forge.js`,
                     `${ window.location.href.replace("/index.html", "") }/assets/scripts/SHA1PRNG.js`,
                     `${ window.location.href.replace("/index.html", "") }/assets/scripts/LamportGenerator.js`
                 ];
@@ -78,34 +78,37 @@ export class MerkleTreeBuilder {
                 // On NodeJS scripts are loaded by the worker itself.
                 scripts = [];
             }
-            else if (window.location.protocol.includes("safari-extension:")) {
+            else if (typeof(window) !== undefined && window.location.protocol.includes("safari-extension:")) {
                 // Safari requires the scripts to be loaded as shown below.
                 scripts = [
-                    `${ safari.extension.baseURI }assets/scripts/sjcl.js`,
+                    `${ safari.extension.baseURI }assets/scripts/forge.js`,
                     `${ safari.extension.baseURI }assets/scripts/SHA1PRNG.js`,
                     `${ safari.extension.baseURI }assets/scripts/LamportGenerator.js`
                 ];
             }
-            else if (window.location.protocol.includes("extension")) {
+            else if (typeof(window) !== undefined && window.location.protocol.includes("extension")) {
                 // Browser extensions requires the scripts to be loaded as shown below
                 scripts = [
-                    `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/sjcl.js`,
+                    `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/forge.js`,
                     `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/SHA1PRNG.js`,
                     `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/LamportGenerator.js`
                 ];
             }
-            else {
+            else if(typeof(window) !== undefined) {
                 // Web requires the scripts to be loaded as shown below.
                 scripts = [
-                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
+                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/forge.js`,
                     `${ window.location.protocol }//${ window.location.host }/assets/scripts/SHA1PRNG.js`,
                     `${ window.location.protocol }//${ window.location.host }/assets/scripts/LamportGenerator.js`
                 ];
             }
+            else {
+                return Promise.reject("Unrecognized platform.");
+            }
 
             // Create a thread pool
             let pool = this.createThreadPool();
-            pool.run(LamportGeneratorThread, scripts);
+            pool.run(LamportGeneratorThread);
 
             // Store job output here. Later we will concatenate it.
             let processedJobOutputs: ILamportGeneratorThreadOutput[] = [];
