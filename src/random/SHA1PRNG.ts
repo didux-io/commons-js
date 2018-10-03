@@ -39,7 +39,7 @@ export class SHA1PRNG implements IPRNG {
             value = convertedValue;
         }
 
-        // If we get an array encode it to an SJCL word array
+        // If we get an array encode it to an forge byte buffer
         if (Array.isArray(value))
             value = this.toByteBuffer(<any>value);
 
