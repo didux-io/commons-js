@@ -15,7 +15,8 @@
       "outDir": "build"
     },
     "include": [
-      "src/**/*.ts"
+      "src/merkle/LamportGenerator.ts",
+      "src/random/SHA1PRNG.ts"
     ],
     "exclude": [
       "node_modules",

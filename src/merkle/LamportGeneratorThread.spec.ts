@@ -42,7 +42,8 @@ describe("LamportGeneratorThread", () => {
 
         // Mock the WebWorker global scope
         let webWorkerScope = {
-            LamportGenerator: LamportGenerator
+            LamportGenerator: LamportGenerator,
+            initialized: true
         }
 
         let callbackSpy = jasmine.createSpy("callback", () => {});

@@ -1,5 +1,4 @@
 import { CryptoHelper } from "./CryptoHelper";
-declare const sjcl: any;
 
 describe("CryptoHelper", () => {
     let cryptoHelper: CryptoHelper;

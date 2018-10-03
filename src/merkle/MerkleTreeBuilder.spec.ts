@@ -21,7 +21,7 @@ describe("MerkleTreeBuilder", () => {
         spyOn(builder, "generateLeafKeys").and.returnValue(Promise.resolve(["1", "2", "3", "4"]));
         spyOn(builder, "generateLayers").and.returnValue(layers);
 
-        builder.generate("PRIVATE_KEY", 2, true, true).then(
+        builder.generate("PRIVATE_KEY", 2).then(
             (merkleTree) => {
                 expect(merkleTree instanceof MerkleTree).toBeTruthy();
                 expect(merkleTree.layers).toBe(layers);
@@ -130,7 +130,7 @@ describe("MerkleTreeBuilder", () => {
             }
         });
 
-        builder.generateLeafKeys("PRIVATE_KEY", 9, true, false).then(
+        builder.generateLeafKeys("PRIVATE_KEY", 9).then(
             (publicKeys) => {
                 let expectedPublicKeys: string[] = [];
                 for(let i = 0; i < 256; i++) {
@@ -178,7 +178,7 @@ describe("MerkleTreeBuilder", () => {
             pool.notifyErrorListeners({}, "Some error");
         });
 
-        builder.generateLeafKeys("PRIVATE_KEY", 9, true, false).then(
+        builder.generateLeafKeys("PRIVATE_KEY", 9).then(
             (publicKeys) => {
                 expect(true).toBeFalsy("Promise resolve should never be called");
 
@@ -187,80 +187,6 @@ describe("MerkleTreeBuilder", () => {
             (error) => {
                 expect(error).toBe("Some error");
                 expect(pool.poolIsKilled).toBeTruthy("Thread pool should be terminated");
-
-                done();
-            }
-        );
-    });
-
-    it("should import the correct scripts on Android platforms", (done) => {
-        let pool = new MockThreadPool();
-
-        // Call through to mocked ThreadPool
-        spyOn(pool, "run").and.callThrough();
-
-        // Spy on the method which creates a thread pool and return our mocked version.
-        spyOn(builder, "createThreadPool").and.returnValue(pool);
-
-        spyOn(pool, "send").and.callFake((job: ILamportGeneratorThreadInput) => {
-            pool.notifyErrorListeners(null, "this is meant to fail");
-        });
-
-        builder.generateLeafKeys("PRIVATE_KEY", 9, true, false).then(
-            (publicKeys) => {
-                expect(true).toBe(false, "Promise resolve should never be called");
-
-                done();
-            },
-            (error) => {
-                // Make sure the failure was triggered by us
-                expect(error).toBe("this is meant to fail");
-
-                expect(pool.run).toHaveBeenCalledWith(
-                    LamportGeneratorThread,
-                    [
-                        `file:///android_asset/www/assets/scripts/sjcl.js`,
-                        `file:///android_asset/www/assets/scripts/SHA1PRNG.js`,
-                        `file:///android_asset/www/assets/scripts/LamportGenerator.js`
-                    ]
-                );
-
-                done();
-            }
-        );
-    });
-
-    it("should import the correct scripts on non-Android platforms", (done) => {
-        let pool = new MockThreadPool();
-
-        // Call through to mocked ThreadPool
-        spyOn(pool, "run").and.callThrough();
-
-        // Spy on the method which creates a thread pool and return our mocked version.
-        spyOn(builder, "createThreadPool").and.returnValue(pool);
-
-        spyOn(pool, "send").and.callFake((job: ILamportGeneratorThreadInput) => {
-            pool.notifyErrorListeners(null, "this is meant to fail");
-        });
-
-        builder.generateLeafKeys("PRIVATE_KEY", 9, false, false).then(
-            (publicKeys) => {
-                expect(true).toBe(false, "Promise resolve should never be called");
-
-                done();
-            },
-            (error) => {
-                // Make sure the failure was triggered by us
-                expect(error).toBe("this is meant to fail");
-
-                expect(pool.run).toHaveBeenCalledWith(
-                    LamportGeneratorThread,
-                    [
-                        `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
-                        `${ window.location.protocol }//${ window.location.host }/assets/scripts/SHA1PRNG.js`,
-                        `${ window.location.protocol }//${ window.location.host }/assets/scripts/LamportGenerator.js`
-                    ]
-                );
 
                 done();
             }
@@ -276,7 +202,7 @@ describe("MerkleTreeBuilder", () => {
             pool.notifyFinishedListener();
         });
 
-        builder.generateLeafKeys("PRIVATE_KEY", 2, true, true, (e) => {
+        builder.generateLeafKeys("PRIVATE_KEY", 2, (e) => {
             expect(e).toBe(0.99);
             done();
         });

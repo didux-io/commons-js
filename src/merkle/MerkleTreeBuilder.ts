@@ -12,8 +12,8 @@ export class MerkleTreeBuilder {
 
     private cryptoHelper = new CryptoHelper();
 
-    generate(privateKey: string, layerCount: number, isAndroid: boolean, isIos: boolean, progressUpdate?: (progress: number) => void): Promise<MerkleTree> {
-        return this.generateLeafKeys(privateKey, layerCount, isAndroid, isIos, progressUpdate).then(
+    generate(privateKey: string, layerCount: number, progressUpdate?: (progress: number) => void): Promise<MerkleTree> {
+        return this.generateLeafKeys(privateKey, layerCount, progressUpdate).then(
             (publicKeys) => {
                 return new MerkleTree(this.generateLayers(publicKeys, layerCount));
             }
@@ -52,51 +52,13 @@ export class MerkleTreeBuilder {
         return new SHA1PRNG(seed);
     }
 
-    generateLeafKeys(privateKey: string, layerCount: number, isAndroid: boolean, isIos:boolean, progressUpdate?: (progress: number) => void): Promise<string[]> {
+    generateLeafKeys(privateKey: string, layerCount: number, progressUpdate?: (progress: number) => void): Promise<string[]> {
         return new Promise((resolve, reject) => {
             let totalKeys = Math.pow(2, layerCount - 1);
 
-            let scripts: string[];
-            if(isAndroid) {
-                // Android requires the scripts to be loaded as shown below.
-                scripts = [
-                    `file:///android_asset/www/assets/scripts/sjcl.js`,
-                    `file:///android_asset/www/assets/scripts/SHA1PRNG.js`,
-                    `file:///android_asset/www/assets/scripts/LamportGenerator.js`
-                ];
-            } else if (isIos) {
-                // iOS requires the scripts to be loaded as shown below.
-                scripts = [
-                    `${ window.location.href.replace("/index.html", "") }/assets/scripts/sjcl.js`,
-                    `${ window.location.href.replace("/index.html", "") }/assets/scripts/SHA1PRNG.js`,
-                    `${ window.location.href.replace("/index.html", "") }/assets/scripts/LamportGenerator.js`
-                ];
-            } else if (window.location.protocol.includes("safari-extension:")) {
-                // Safari requires the scripts to be loaded as shown below.
-                scripts = [
-                    `${ safari.extension.baseURI }assets/scripts/sjcl.js`,
-                    `${ safari.extension.baseURI }assets/scripts/SHA1PRNG.js`,
-                    `${ safari.extension.baseURI }assets/scripts/LamportGenerator.js`
-                ];
-            } else if (window.location.protocol.includes("extension")) {
-                // Browser extensions requires the scripts to be loaded as shown below
-                scripts = [
-                    `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/sjcl.js`,
-                    `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/SHA1PRNG.js`,
-                    `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/LamportGenerator.js`
-                ];
-            } else {
-                // Web requires the scripts to be loaded as shown below.
-                scripts = [
-                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
-                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/SHA1PRNG.js`,
-                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/LamportGenerator.js`
-                ];
-            }
-
             // Create a thread pool
             let pool = this.createThreadPool();
-            pool.run(LamportGeneratorThread, scripts);
+            pool.run(LamportGeneratorThread);
 
             // Store job output here. Later we will concatenate it.
             let processedJobOutputs: ILamportGeneratorThreadOutput[] = [];

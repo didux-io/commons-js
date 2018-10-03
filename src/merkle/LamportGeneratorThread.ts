@@ -1,5 +1,3 @@
-import { LamportGenerator } from "./LamportGenerator";
-
 export interface ILamportGeneratorThreadInput {
     startIndex: number,
     seeds: Int8Array[],
@@ -11,18 +9,37 @@ export interface ILamportGeneratorThreadOutput {
     publicKeys: string[]
 }
 
-export function LamportGeneratorThread(input: ILamportGeneratorThreadInput, done: (publicKeys: ILamportGeneratorThreadOutput) => void) {
-    // Create the LamportGenerator. We use this unusual syntax because otherwise UglifyJS will uglify this
-    // piece of code causing it to not call the correct constructor. This is a bit hacky but no better solution
-    // (including messing with the UglifyJS config) so far presented a better method.
-    let lamportGenerator = <LamportGenerator>(new this["LamportGenerator"](input.seeds, input.count));
+// Placeholders. The actual content will be set by Webpack.
+// These placeholders are just here to prevent Typescript from
+// throwing syntax errors.
+declare const LamportGeneratorCode: string;
+declare const SHA1PRNGCode: string;
+declare const ForgeCode: string;
 
-    lamportGenerator.fill();
+export function LamportGeneratorThread(input: ILamportGeneratorThreadInput, done: (publicKeys: ILamportGeneratorThreadOutput) => void) {
+    if(!this.initialized) {
+        // Forge library will be inserted here.
+        // Since it is a global library no assignments are required.
+        ForgeCode;
+
+        // SHA1PRNG and LamportGenerator will be inserted here.
+        // Since these are not global libraries they must be assigned
+        // to the global worker scope.
+        this.SHA1PRNG = SHA1PRNGCode;
+        this.LamportGenerator = LamportGeneratorCode;
+
+        // Prevent script initialization to run twice.
+        this.initialized = true;
+    }
+
+    let generator = new this.LamportGenerator(input.seeds, input.count);
+
+    generator.fill();
 
     done(
         {
             startIndex: input.startIndex,
-            publicKeys: lamportGenerator.publicKeys
+            publicKeys: generator.publicKeys
         }
     );
 }
