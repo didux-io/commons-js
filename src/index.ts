@@ -1,36 +1,14 @@
-import { AddressHelper } from "./address/AddressHelper";
-import { FixedBigNumber } from "./big-number/FixedBigNumber";
-import { CryptoHelper } from "./crypto/CryptoHelper";
-import { EncryptionHelper } from "./keystore/EncryptionHelper";
-import { MerkleTree } from "./merkle/MerkleTree";
-import { MerkleTreeBuilder } from "./merkle/MerkleTreeBuilder";
-import { MerkleTreeDeserializer } from "./merkle/MerkleTreeDeserializer";
-import { MerkleTreeHelper } from "./merkle/MerkleTreeHelper";
-import { MerkleTreeSerializer } from "./merkle/MerkleTreeSerializer";
-import { MerkleLamportSigner } from "./signatures/MerkleLamportSigner";
-import { MerkleLamportVerifier } from "./signatures/MerkleLamportVerifier";
-import { TransactionHelper } from "./transactions/TransactionHelper";
-import { SeededRandom } from "./random/SeededRandom";
-import { SHA1PRNG } from "./random/SHA1PRNG";
-
-/*
-    This file is responsible for bootstrapping all dependencies.
-    Only dependencies exported in this file can be accessed by programs
-    implementing this library.
-*/
-export {
-    AddressHelper,
-    FixedBigNumber,
-    CryptoHelper,
-    EncryptionHelper,
-    MerkleTree,
-    MerkleTreeBuilder,
-    MerkleTreeDeserializer,
-    MerkleTreeHelper,
-    MerkleTreeSerializer,
-    SeededRandom,
-    SHA1PRNG,
-    MerkleLamportSigner,
-    MerkleLamportVerifier,
-    TransactionHelper
-};
+export { AddressHelper } from "./address/AddressHelper";
+export { FixedBigNumber } from "./big-number/FixedBigNumber";
+export { CryptoHelper } from "./crypto/CryptoHelper";
+export { EncryptionHelper } from "./keystore/EncryptionHelper";
+export { MerkleTree } from "./merkle/MerkleTree";
+export { MerkleTreeBuilder } from "./merkle/MerkleTreeBuilder";
+export { MerkleTreeDeserializer } from "./merkle/MerkleTreeDeserializer";
+export { MerkleTreeHelper } from "./merkle/MerkleTreeHelper";
+export { MerkleTreeSerializer } from "./merkle/MerkleTreeSerializer";
+export { MerkleLamportSigner } from "./signatures/MerkleLamportSigner";
+export { MerkleLamportVerifier } from "./signatures/MerkleLamportVerifier";
+export { TransactionHelper } from "./transactions/TransactionHelper";
+export { SeededRandom } from "./random/SeededRandom";
+export { SHA1PRNG } from "./random/SHA1PRNG";
