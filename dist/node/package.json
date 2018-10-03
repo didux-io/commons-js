@@ -1,0 +1,9 @@
+{
+  "name": "smilo-commons-js-node",
+  "version": "0.0.1",
+  "description": "Common set of functionality for the Smilo Platform.",
+  "main": "smilo-node.js",
+  "author": "Smilo Platform",
+  "license": "ISC",
+  "typings": "smilo-node.d.ts"
+}
