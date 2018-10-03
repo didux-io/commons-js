@@ -12,7 +12,7 @@ export class MerkleTreeDeserializer {
 
     }
 
-    fromDisk(wallet: ILocalWallet, password: string): Promise<MerkleTree> {
+    deserialize(wallet: ILocalWallet, password: string): Promise<MerkleTree> {
         // Retrieve the config
         return this.storageManager.readJSON<IMerkleTreeConfig>(
             MerkleTreeHelper.getConfigStorageKey(wallet)
