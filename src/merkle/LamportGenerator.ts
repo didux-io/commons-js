@@ -86,24 +86,24 @@ export class LamportGenerator {
                 + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)];
     }
 
-    private sha256Short(data: string): string {
+    sha256Short(data: string): string {
         return this.sha256(data).substr(0, 16);
     }
 
-    private sha512(data: string): string {
+    sha512(data: string): string {
         this.md512.update(data);
 
-        let output = this.md512.digest();
+        let output = this.md512.digest().getBytes();
 
         this.md512.start();
 
         return forge.util.encode64(output);
     }
 
-    private sha256(data: string): string {
+    sha256(data: string): string {
         this.md256.update(data);
 
-        let output = this.md256.digest();
+        let output = this.md256.digest().getBytes();
 
         this.md256.start();
 
