@@ -5,7 +5,6 @@ import { ILamportGeneratorThreadInput, ILamportGeneratorThreadOutput, LamportGen
 import { CryptoHelper } from "../crypto/CryptoHelper";
 import { ThreadPool } from "./ThreadPool";
 import { MockThreadPool } from "../../mocks/MockThreadPool";
-import { PlatformHelper } from "../platform/PlatformHelper";
 
 describe("MerkleTreeBuilder", () => {
     let builder: MerkleTreeBuilder;
@@ -80,9 +79,6 @@ describe("MerkleTreeBuilder", () => {
     it("should generate the Merkle Tree leaf nodes correctly", (done) => {
         let pool = new MockThreadPool();
 
-        // Set platform to Android
-        PlatformHelper.initialize("android");
-
         // Spy on the method which creates a thread pool and return our mocked version.
         spyOn(builder, "createThreadPool").and.returnValue(pool);
 
@@ -156,9 +152,6 @@ describe("MerkleTreeBuilder", () => {
     it("should handle errors when generating the Merkle Tree leaf nodes correctly", (done) => {
         let pool = new MockThreadPool();
 
-        // Set platform to Android
-        PlatformHelper.initialize("android");
-
         // Spy on the method which creates a thread pool and return our mocked version.
         spyOn(builder, "createThreadPool").and.returnValue(pool);
 
@@ -200,88 +193,9 @@ describe("MerkleTreeBuilder", () => {
         );
     });
 
-    it("should import the correct scripts on Android platforms", (done) => {
-        let pool = new MockThreadPool();
-
-        // Set platform to Android
-        PlatformHelper.initialize("android");
-
-        // Call through to mocked ThreadPool
-        spyOn(pool, "run").and.callThrough();
-
-        // Spy on the method which creates a thread pool and return our mocked version.
-        spyOn(builder, "createThreadPool").and.returnValue(pool);
-
-        spyOn(pool, "send").and.callFake((job: ILamportGeneratorThreadInput) => {
-            pool.notifyErrorListeners(null, "this is meant to fail");
-        });
-
-        builder.generateLeafKeys("PRIVATE_KEY", 9).then(
-            (publicKeys) => {
-                expect(true).toBe(false, "Promise resolve should never be called");
-
-                done();
-            },
-            (error) => {
-                // Make sure the failure was triggered by us
-                expect(error).toBe("this is meant to fail");
-
-                expect(pool.run).toHaveBeenCalledWith(
-                    LamportGeneratorThread,
-                    [
-                        `file:///android_asset/www/assets/scripts/sjcl.js`,
-                        `file:///android_asset/www/assets/scripts/SHA1PRNG.js`,
-                        `file:///android_asset/www/assets/scripts/LamportGenerator.js`
-                    ]
-                );
-
-                done();
-            }
-        );
-    });
-
-    it("should import the correct scripts on non-Android platforms", (done) => {
-        let pool = new MockThreadPool();
-
-        // Set platform to Android
-        PlatformHelper.initialize("node");
-
-        // Call through to mocked ThreadPool
-        spyOn(pool, "run").and.callThrough();
-
-        // Spy on the method which creates a thread pool and return our mocked version.
-        spyOn(builder, "createThreadPool").and.returnValue(pool);
-
-        spyOn(pool, "send").and.callFake((job: ILamportGeneratorThreadInput) => {
-            pool.notifyErrorListeners(null, "this is meant to fail");
-        });
-
-        builder.generateLeafKeys("PRIVATE_KEY", 9).then(
-            (publicKeys) => {
-                expect(true).toBe(false, "Promise resolve should never be called");
-
-                done();
-            },
-            (error) => {
-                // Make sure the failure was triggered by us
-                expect(error).toBe("this is meant to fail");
-
-                expect(pool.run).toHaveBeenCalledWith(
-                    LamportGeneratorThread,
-                    []
-                );
-
-                done();
-            }
-        );
-    });
-
     it("should call the progress listener and in this case instantly return 0.99", (done) => {
         let pool = new MockThreadPool();
         spyOn(builder, "createThreadPool").and.returnValue(pool);
-
-        // Set platform to Android
-        PlatformHelper.initialize("android");
 
         spyOn(pool, "send").and.callFake((job: ILamportGeneratorThreadInput) => {
             pool.notifyJobDoneListener({}, "");
