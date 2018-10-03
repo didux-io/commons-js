@@ -4,6 +4,6 @@
   "description": "Common set of functionality for the Smilo Platform.",
   "main": "smilo-web.js",
   "author": "Smilo Platform",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "typings": "smilo-web.d.ts"
 }
