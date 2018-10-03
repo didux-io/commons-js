@@ -1,5 +1,3 @@
-const execSync = require("child_process").execSync;
-
 function DtsBundlePlugin(name, outputPath) {
     this.name = name;
     this.outputPath = outputPath;
@@ -21,9 +19,6 @@ DtsBundlePlugin.prototype.apply = function (compiler) {
                 exclude: /index.d.ts/g,
                 outputAsModuleFolder: true // to use npm in-package typings
             });
-
-            // Now strip a part
-            // execSync("")
         }
     );
 };
