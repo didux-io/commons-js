@@ -12,12 +12,6 @@ import { MerkleLamportVerifier } from "./signatures/MerkleLamportVerifier";
 import { TransactionHelper } from "./transactions/TransactionHelper";
 import { SeededRandom } from "./random/SeededRandom";
 import { SHA1PRNG } from "./random/SHA1PRNG";
-import { PlatformHelper } from "./platform/PlatformHelper";
-
-if(process.env.TARGET == "node") {
-    // We are building for node so we can immediately set the platform
-    PlatformHelper.initialize("node");
-}
 
 /*
     This file is responsible for bootstrapping all dependencies.
@@ -38,6 +32,5 @@ export {
     SHA1PRNG,
     MerkleLamportSigner,
     MerkleLamportVerifier,
-    TransactionHelper,
-    PlatformHelper
+    TransactionHelper
 };

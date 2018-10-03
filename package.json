@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack",
     "build-watch": "webpack --env.WATCH=true",
-    "build-prod": "webpack --env.MODE=production ",
+    "build-prod": "webpack --env.MODE=production",
+    "tsc-worker": "tsc --p tsconfig.worker.json",
     "test": "ts-node node_modules/jasmine/bin/jasmine"
   },
   "repository": {

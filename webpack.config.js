@@ -2,6 +2,7 @@ const webpack = require("webpack");
 const path = require("path");
 const fs = require("fs-extra");
 const CompileInfoPlugin = require("./webpack-plugins/CompileInfoPlugin");
+const execSync = require("child_process").execSync;
 
 module.exports = (env) => {
     env = env || {};
@@ -38,7 +39,18 @@ module.exports = (env) => {
         }
     );
 
+    // This part sucks!!!
+    // Basically: we want the web worker to have access to the required library
+    // without having to import them. Webpack does not allow us to easily do this.
+    // Instead we use the DefinePlugin to 'inject' the source in the web worker function.
+    // This way no extra scripts need to be imported and the user can use a single library file :)
+    // However... this comes with a big downside:
+    // Changing the source of LamportGenerator or SHA1PRNG does NOT cause Webpack to update
+    // the sources in the web worker function. Effectively you need to stop the watch and restart webpack...
+    execSync("./scripts/prepare-web-worker.sh");
     let forgeSourceCode = fs.readFileSync("./node_modules/node-forge/dist/forge.min.js").toString();
+    let lamportGeneratorSourceCode = fs.readFileSync("./build/merkle/LamportGenerator.stripped.js").toString();
+    let sha1PrngSourceCode = fs.readFileSync("./build/random/SHA1PRNG.stripped.js").toString();
 
     return [
         // Web
@@ -57,7 +69,10 @@ module.exports = (env) => {
                 new webpack.DefinePlugin({
                     "process.env": {
                         TARGET: "'web'"
-                    }
+                    },
+                    LamportGeneratorCode: lamportGeneratorSourceCode,
+                    SHA1PRNGCode: sha1PrngSourceCode,
+                    ForgeCode: forgeSourceCode
                 })
             ],
             output: {
@@ -66,10 +81,7 @@ module.exports = (env) => {
                 filename: "smilo-web.js",
                 path: path.resolve(__dirname, "dist")
             },
-            watch: watch,
-            externals: {
-                "./LamportGeneratorThread": "LamportGeneratorThread"
-            }
+            watch: watch
         },
         // Node
         {
@@ -87,7 +99,10 @@ module.exports = (env) => {
                 new webpack.DefinePlugin({
                     "process.env": {
                         TARGET: "'node'"
-                    }
+                    },
+                    LamportGeneratorCode: lamportGeneratorSourceCode,
+                    SHA1PRNGCode: sha1PrngSourceCode,
+                    ForgeCode: forgeSourceCode
                 })
             ],
             output: {
@@ -97,36 +112,6 @@ module.exports = (env) => {
             },
             watch: watch,
             externals: nodeExternals
-        },
-        // Worker for web
-        {
-            entry: "./src/merkle/LamportGeneratorThread.ts",
-            target: "webworker",
-            module: module,
-            resolve: resolve,
-            mode: mode,
-            stats: "errors-only",
-            plugins: [
-                new CompileInfoPlugin("WebWorker", () => {
-                    // Copy output to example folders
-                    fs.copySync("./dist/smilo-web-worker.js", "./examples/web/smilo-web-worker.js");
-                }),
-                new webpack.DefinePlugin({
-                    "process.env": {
-                        TARGET: "'web'"
-                    },
-                    LamportGeneratorCode: "class LamportGenerator{}",
-                    SHA1PRNGCode: "class SHA1PRNG{}",
-                    ForgeCode: forgeSourceCode
-                })
-            ],
-            output: {
-                libraryTarget: "window",
-                library: "LamportGeneratorThread",
-                filename: "smilo-web-worker.js",
-                path: path.resolve(__dirname, "dist")
-            },
-            watch: watch
         }
     ]
 }
