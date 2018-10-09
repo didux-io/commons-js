@@ -41,9 +41,9 @@ For web environments [Web Workers](https://developer.mozilla.org/en-US/docs/Web/
 
 The `MerkleTreeBuilder` is only responsible for creating a Merkle Tree. It is not responsible for storing a Merkle Tree. 
 
-To serialize and deserialize a Merkle Tree you can use the `MerkleTreeSerializer` and `MerkleTreeDeserializer` classes.
+To serialize and deserialize a Merkle Tree you can use the `MerkleTreeSerializer` class.
 
-Both classes require a storage manager responsible for the actual writing and reading from whatever storage device you require.
+This class requires a storage manager responsible for the actual writing and reading from whatever storage device you require.
 
 A storage manager is defined, in Typescript, as shown below:
 
@@ -67,6 +67,11 @@ interface IStorageManager {
      * Writes the given Javascript object as JSON to the given path.
      */
     writeJSON(path: string, data: any): Promise<void>;
+
+    /**
+     * Removes the data at the given path from storage.
+     */
+    remove(path: string): Promise<void>;
 }
 ```
 
@@ -94,6 +99,12 @@ function LocalStorageManager() {
     }
     this.writeJSON = function(path, data) {
         return this.write(path, JSON.stringify(data));
+    }
+
+    this.remove = function(path) {
+        localStorage.removeItem(path);
+
+        return Promise.resolve();
     }
 }
 ```
@@ -123,7 +134,7 @@ To deserialize a Merkle Tree you could do this:
 ```
 // We use the LocalStorageManager described above.
 var storageManager = new LocalStorageManager();
-var serializer = new Smilo.MerkleTreeDeserializer(storageManager);
+var serializer = new Smilo.MerkleTreeSerializer(storageManager);
 
 serializer.serialize("path/to/merkle/tree").then(
     function(merkleTree) {
@@ -131,6 +142,23 @@ serializer.serialize("path/to/merkle/tree").then(
     },
     function(error) {
         // Something went wrong reading the Merkle Tree.
+    }
+);
+```
+
+To clean a Merkle Tree from storage you could do this:
+
+```
+// We use the LocalStorageManager described above.
+var storageManager = new LocalStorageManager();
+var serializer = new Smilo.MerkleTreeSerializer(storageManager);
+
+serializer.clean("path/to/merkle/tree").then(
+    function() {
+        // Merkle tree was cleaned from storage
+    },
+    function(error) {
+        // Something went wrong cleaning the Merkle Tree from storage
     }
 );
 ```

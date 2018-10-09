@@ -2,6 +2,17 @@ import { IStorageManager } from "./IStorageManager";
 import * as fs from "fs";
 
 export class NodeStorageManager implements IStorageManager {
+    remove(path: string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            fs.unlink(path, (error) => {
+                if(!error)
+                    resolve();
+                else
+                    reject(error);
+            });
+        });
+    }
+
     read(path: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             fs.readFile(path, (error, data) => {

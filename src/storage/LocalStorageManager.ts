@@ -1,6 +1,12 @@
 import { IStorageManager } from "./IStorageManager";
 
 export class LocalStorageManager implements IStorageManager {
+    remove(path: string): Promise<void> {
+        localStorage.removeItem(path);
+
+        return Promise.resolve();
+    }
+
     read(path: string): Promise<string> {
         let data = localStorage.getItem(path);
 

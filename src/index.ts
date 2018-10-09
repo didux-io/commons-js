@@ -4,7 +4,6 @@ export { CryptoHelper } from "./crypto/CryptoHelper";
 export { EncryptionHelper } from "./keystore/EncryptionHelper";
 export { MerkleTree } from "./merkle/MerkleTree";
 export { MerkleTreeBuilder } from "./merkle/MerkleTreeBuilder";
-export { MerkleTreeDeserializer } from "./merkle/MerkleTreeDeserializer";
 export { MerkleTreeHelper } from "./merkle/MerkleTreeHelper";
 export { MerkleTreeSerializer } from "./merkle/MerkleTreeSerializer";
 export { MerkleLamportSigner } from "./signatures/MerkleLamportSigner";
