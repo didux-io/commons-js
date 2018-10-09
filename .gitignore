@@ -1,6 +1,5 @@
 node_modules
 .vscode
-dist
+dist/**/*.js
+dist/**/*.d.ts
 build
-examples/node/smilo-node.js
-examples/web/smilo-web.js

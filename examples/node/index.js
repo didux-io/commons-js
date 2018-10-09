@@ -1,5 +1,15 @@
 const Smilo = require("./smilo-node.js");
 
-let cryptoHelper = new Smilo.CryptoHelper();
+let builder = new Smilo.MerkleTreeBuilder();
 
-console.log(cryptoHelper.sha256("Hello World"));
+builder.generate("PRIVATE_KEY", 14, (progress) => {
+    console.log(progress);
+}).then(
+    (merkleTree) => {
+        console.log("Done!");
+    },
+    (error) => {
+        console.error("Failed to generate Merkle Tree");
+        console.error(error);
+    }
+);

@@ -2,9 +2,27 @@
     <head>
         <title>Simple Smilo Commons JS Example</title>
 
+        <!-- <script src="smilo-web-worker.js"></script> -->
         <script src="smilo-web.js"></script>
     </head>
     <body>
         Hello World!
+
+        <script>
+            let builder = new Smilo.MerkleTreeBuilder();
+
+            builder.generate("PRIVATE_KEY", 4, (progress) => {
+                console.log(progress);
+            }).then(
+                (merkleTree) => {
+                    console.log("Done!");
+                    console.log(merkleTree);
+                },
+                (error) => {
+                    console.error("Failed to generate Merkle Tree");
+                    console.error(error);
+                }
+            );
+        </script>
     </body>
 </html>

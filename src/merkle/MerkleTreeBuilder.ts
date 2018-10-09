@@ -5,8 +5,6 @@ import { MerkleTree } from "./MerkleTree";
 import { IPRNG } from "../random/IPRNG";
 import { SHA1PRNG } from "../random/SHA1PRNG";
 
-declare const safari: any;
-
 export class MerkleTreeBuilder {
     private readonly KEYS_PER_JOB = 100;
 

@@ -2,6 +2,7 @@ const webpack = require("webpack");
 const path = require("path");
 const fs = require("fs-extra");
 const CompileInfoPlugin = require("./webpack-plugins/CompileInfoPlugin");
+const DtsBundlePlugin = require("./webpack-plugins/DtsBundlePlugin");
 const execSync = require("child_process").execSync;
 
 module.exports = (env) => {
@@ -61,10 +62,11 @@ module.exports = (env) => {
             resolve: resolve,
             mode: mode,
             stats: "errors-only",
+            devtool: mode == "development" ? "inline-source-map" : "source-map",
             plugins: [
                 new CompileInfoPlugin("Web", () => {
                     // Copy output to example folders
-                    fs.copySync("./dist/smilo-web.js", "./examples/web/smilo-web.js");
+                    fs.copySync("./dist/web/smilo-web.js", "./examples/web/smilo-web.js");
                 }),
                 new webpack.DefinePlugin({
                     "process.env": {
@@ -73,13 +75,14 @@ module.exports = (env) => {
                     LamportGeneratorCode: lamportGeneratorSourceCode,
                     SHA1PRNGCode: sha1PrngSourceCode,
                     ForgeCode: forgeSourceCode
-                })
+                }),
+                new DtsBundlePlugin("smilo-commons-js-web", "../dist/web/smilo-web.d.ts")
             ],
             output: {
                 libraryTarget: "window",
                 library: "Smilo",
                 filename: "smilo-web.js",
-                path: path.resolve(__dirname, "dist")
+                path: path.resolve(__dirname, "dist/web")
             },
             watch: watch
         },
@@ -91,10 +94,12 @@ module.exports = (env) => {
             resolve: resolve,
             mode: mode,
             stats: "errors-only",
+            devtool: mode == "development" ? "inline-source-map" : "source-map",
             plugins: [
+                new DtsBundlePlugin("smilo-commons-js-node", "../dist/node/smilo-node.d.ts"),
                 new CompileInfoPlugin("Node", () => {
                     // Copy output to example folders
-                    fs.copySync("./dist/smilo-node.js", "./examples/node/smilo-node.js");
+                    fs.copySync("./dist/node/smilo-node.js", "./examples/node/smilo-node.js");
                 }),
                 new webpack.DefinePlugin({
                     "process.env": {
@@ -108,7 +113,7 @@ module.exports = (env) => {
             output: {
                 libraryTarget: "commonjs",
                 filename: "smilo-node.js",
-                path: path.resolve(__dirname, "dist")
+                path: path.resolve(__dirname, "dist/node")
             },
             watch: watch,
             externals: nodeExternals

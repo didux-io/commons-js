@@ -56,7 +56,7 @@ describe("MerkleTreeDeserializer", () => {
             }
         });
 
-        deserializer.fromDisk(<any>{}, "pass123").then(
+        deserializer.deserialize(<any>{}, "pass123").then(
             (merkleTree) => {
                 expect(merkleTree instanceof MerkleTree).toBeTruthy();
                 expect(merkleTree.layers).toEqual([
@@ -106,7 +106,7 @@ describe("MerkleTreeDeserializer", () => {
             return null;
         });
 
-        deserializer.fromDisk(<any>{}, "wrong_password").then(
+        deserializer.deserialize(<any>{}, "wrong_password").then(
             (merkleTree) => {
                 expect(true).toBeFalsy("Promise resolve should never be called");
 
@@ -156,7 +156,7 @@ describe("MerkleTreeDeserializer", () => {
             }
         });
 
-        deserializer.fromDisk(<any>{}, "pass123").then(
+        deserializer.deserialize(<any>{}, "pass123").then(
             (merkleTree) => {
                 expect(true).toBeFalsy("Promise resolve should never be called");
 
@@ -183,7 +183,7 @@ describe("MerkleTreeDeserializer", () => {
             }
         });
 
-        deserializer.fromDisk(<any>{}, "pass123").then(
+        deserializer.deserialize(<any>{}, "pass123").then(
             (merkleTree) => {
                 expect(true).toBeFalsy("Promise resolve should never be called");
 
