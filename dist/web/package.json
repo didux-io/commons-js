@@ -1,7 +1,7 @@
 {
   "name": "smilo-commons-js-web",
   "version": "0.0.1",
-  "description": "Common set of functionality for the Smilo Platform.",
+  "description": "Common set of Javascript functionality for the Smilo Platform.",
   "main": "smilo-web.js",
   "author": "Smilo Platform",
   "license": "Apache-2.0",
