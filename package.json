@@ -8,7 +8,9 @@
     "build-watch": "webpack --env.WATCH=true",
     "build-prod": "webpack --env.MODE=production",
     "tsc-worker": "tsc --p tsconfig.worker.json",
-    "test": "ts-node node_modules/jasmine/bin/jasmine"
+    "test": "ts-node node_modules/jasmine/bin/jasmine",
+    "prepare-npm-packages": "./scripts/prepare-npm-packages.sh",
+    "publish-npm-packages": "./scripts/publish-npm-packages.sh"
   },
   "repository": {
     "type": "git",

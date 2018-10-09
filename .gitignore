@@ -4,4 +4,6 @@ dist/**/*.js
 dist/**/*.d.ts
 dist/**/*.js.map
 dist/**/*.md
+dist/**/licences
+dist/**/LICENCE
 build
