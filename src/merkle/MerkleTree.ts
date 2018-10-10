@@ -1,4 +1,4 @@
-import { AddressHelper } from "../address/AddressHelper";
+import { AddressHelper, AddressType } from "../address/AddressHelper";
 
 export class MerkleTree {
     private addressHelper = new AddressHelper();
@@ -10,9 +10,11 @@ export class MerkleTree {
     }
 
     getPublicKey(): string {
+        let addressType = "S" + (this.layers.length - 14);
+
         return this.addressHelper.addressFromPublicKey(
             this.layers[this.layers.length - 2][0] + this.layers[this.layers.length - 2][1],
-            this.layers.length
+            <AddressType>addressType
         );
     }
 }
