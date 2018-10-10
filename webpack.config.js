@@ -79,7 +79,7 @@ module.exports = (env) => {
                 new DtsBundlePlugin("smilo-commons-js-web", "../dist/web/smilo-web.d.ts")
             ],
             output: {
-                libraryTarget: "window",
+                libraryTarget: "umd",
                 library: "Smilo",
                 filename: "smilo-web.js",
                 path: path.resolve(__dirname, "dist/web")
