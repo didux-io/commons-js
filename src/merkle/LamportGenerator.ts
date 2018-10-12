@@ -25,6 +25,13 @@ export class LamportGenerator {
         for(let i = 0; i < this.count; i++) {
             let seed = this.seeds[i];
 
+            if(!Array.isArray(seed)) {
+                // The seed is not an array so we must map it to one.
+                // This happens on node child_process environments where an array
+                // is serialized to an object where the key is the index.
+                seed = this.toArray(<any>seed);
+            }
+
             // Prepare prng
             this.prng = new SHA1PRNG(seed);
 
@@ -32,6 +39,16 @@ export class LamportGenerator {
                 this.sha256(this.getLamportPublicKey())
             );
         }
+    }
+
+    private toArray(seedObject: {[index: string]: number}): Int8Array {
+        let numbers = [];
+
+        for(let key in seedObject) {
+            numbers[Number(key)] = seedObject[key];
+        }
+
+        return new Int8Array(numbers);
     }
 
     private getLamportPublicKey(): string {
