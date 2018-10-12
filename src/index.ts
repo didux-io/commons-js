@@ -10,5 +10,4 @@ export { MerkleTreeSerializer } from "./merkle/MerkleTreeSerializer";
 export { MerkleLamportSigner } from "./signatures/MerkleLamportSigner";
 export { MerkleLamportVerifier } from "./signatures/MerkleLamportVerifier";
 export { TransactionHelper } from "./transactions/TransactionHelper";
-export { SeededRandom } from "./random/SeededRandom";
 export { SHA1PRNG } from "./random/SHA1PRNG";

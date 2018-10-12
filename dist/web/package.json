@@ -1,9 +1,16 @@
 {
-  "name": "smilo-commons-js-web",
-  "version": "0.0.1",
-  "description": "Common set of functionality for the Smilo Platform.",
+  "name": "@smilo-platform/smilo-commons-js-web",
+  "version": "0.0.4",
+  "description": "Common set of Javascript functionality for the Smilo Platform.",
   "main": "smilo-web.js",
   "author": "Smilo Platform",
   "license": "Apache-2.0",
-  "typings": "smilo-web.d.ts"
+  "typings": "smilo-web.d.ts",
+  "private": false,
+  "keywords": [
+    "smilo",
+    "blockchain",
+    "merkle",
+    "lamport"
+  ]
 }

@@ -2,4 +2,9 @@ node_modules
 .vscode
 dist/**/*.js
 dist/**/*.d.ts
+dist/**/*.js.map
+dist/**/*.md
+!dist/readme/*.md
+dist/**/licences
+dist/**/LICENCE
 build

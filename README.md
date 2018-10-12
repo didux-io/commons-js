@@ -37,6 +37,24 @@ To create a production build run the following command in the root of the projec
 npm run build-prod
 ```
 
+### Publishing
+
+To publish the node and web version of this library to NPM do:
+
+```
+npm run publish-npm-packages
+```
+
+This will run a production build and prepare the packages for distribution.
+
+The directories which will be uploaded to NPM can be found at `./dist/node` and `./dist/web`.
+
+You can also prepare these directories without uploading by running:
+
+```
+npm run prepare-npm-packages
+```
+
 ## Testing
 
 We use Jasmine to unit test this project. To run all tests run the following command in the root of the project:
