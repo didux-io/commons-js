@@ -1,5 +1,5 @@
 import { CryptoHelper } from "../crypto/CryptoHelper";
-import { AddressHelper } from "../address/AddressHelper";
+import { AddressHelper, AddressType } from "../address/AddressHelper";
 
 export class MerkleLamportVerifier {
     private cryptoHelper = new CryptoHelper();
@@ -107,7 +107,7 @@ export class MerkleLamportVerifier {
         else
             combinedHashes = path[path.length - 1] + nextRoot;
 
-        let rootAddress = this.addressHelper.addressFromPublicKey(combinedHashes, layerCount);
+        let rootAddress = this.addressHelper.addressFromPublicKey(combinedHashes, <AddressType>("S" + (layerCount - 14)));
         return rootAddress == expectedRootAddress
     }
 }

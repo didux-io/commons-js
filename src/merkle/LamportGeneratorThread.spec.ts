@@ -2,7 +2,7 @@ import { LamportGeneratorThread, ILamportGeneratorThreadInput } from "./LamportG
 import { LamportGenerator } from "./LamportGenerator";
 
 describe("LamportGeneratorThread", () => {
-    it("call the callback function", () => {
+    it("should call the callback function", () => {
         let input: ILamportGeneratorThreadInput = {
             startIndex: 1337,
             seeds: [

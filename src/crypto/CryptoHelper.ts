@@ -1,5 +1,6 @@
 import * as forge from "node-forge";
 import * as base32 from "hi-base32";
+import * as js_sha3 from "js-sha3";
 
 export class CryptoHelper {
     private md256;
@@ -10,6 +11,10 @@ export class CryptoHelper {
         this.md256 = forge.md.sha256.create();
         this.md512 = forge.md.sha512.create();
         this.isInitialized = true;
+    }
+
+    keccak256(data: string): string {
+        return js_sha3.keccak256(data);
     }
 
     sha512(data: string): string {
