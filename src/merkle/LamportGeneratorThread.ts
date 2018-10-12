@@ -18,9 +18,19 @@ declare const ForgeCode: string;
 
 export function LamportGeneratorThread(input: ILamportGeneratorThreadInput, done: (publicKeys: ILamportGeneratorThreadOutput) => void) {
     if(!this.initialized) {
-        // Forge library will be inserted here.
-        // Since it is a global library no assignments are required.
-        ForgeCode;
+        {
+            // This is strange but we do this to trick forge into exporting
+            // in our own custom defined module. Otherwise it might fail on
+            // some platforms.
+            let module = {
+                exports: {}
+            };
+            let exports = {};
+
+            ForgeCode;
+
+            this["forge"] = module["exports"];
+        }
 
         // SHA1PRNG and LamportGenerator will be inserted here.
         // Since these are not global libraries they must be assigned

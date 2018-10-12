@@ -1,6 +1,10 @@
 import { IStorageManager } from "../src/storage/IStorageManager";
 
 export class MockStorageManager implements IStorageManager {
+    remove(path: string): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
+
     read(path: string): Promise<string> {
         throw new Error("Method not implemented.");
     }    
@@ -14,6 +18,4 @@ export class MockStorageManager implements IStorageManager {
     writeJSON(path: string, data: any): Promise<void> {
         throw new Error("Method not implemented.");
     }
-
-
 }

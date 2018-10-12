@@ -20,4 +20,9 @@ export interface IStorageManager {
      * Writes the given Javascript object as JSON to the given path.
      */
     writeJSON(path: string, data: any): Promise<void>;
+
+    /**
+     * Removes the data at the given path from storage.
+     */
+    remove(path: string): Promise<void>;
 }
