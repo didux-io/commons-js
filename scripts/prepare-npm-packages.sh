@@ -13,6 +13,10 @@ cat ./dist/readme/intro.md >> ./dist/node/README.md
 cat ./dist/readme/install.node.md >> ./dist/node/README.md
 cat ./dist/readme/examples.md >> ./dist/node/README.md
 
+# Clear old licences
+rm -rf ./dist/node/licences
+rm -rf ./dist/web/licences
+
 # Copy licenses
 cp ./LICENCE ./dist/node/LICENCE
 cp ./LICENCE ./dist/web/LICENCE
