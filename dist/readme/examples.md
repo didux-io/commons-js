@@ -162,7 +162,6 @@ serializer.clean("path/to/merkle/tree").then(
     }
 );
 ```
-
 ### Signatures
 
 Every transaction on the Smilo Blockchain has to be cryptographically signed with a valid Lamport signature. Because a Lamport private key, used to create a Lamport signature, should only ever be used once we use a Merkle Tree to easily provide many private keys derived from a single root key.
