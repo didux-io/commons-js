@@ -1,4 +1,9 @@
-import { AddressHelper } from "./AddressHelper";
+import { AddressHelper, AddressValidationErrorType } from "./AddressHelper";
+
+interface IInvalidAddressTestVector {
+    address: string;
+    error: AddressValidationErrorType;
+}
 
 describe("AddressHelper", () => {
     let helper: AddressHelper;
@@ -33,52 +38,50 @@ describe("AddressHelper", () => {
         );
     });
 
-    // // we use the addresses shown below as test vectors.
-    // let templatePublicKeys = [
-    //     {
-    //         key: "PUBLIC_KEY_1",
-    //         layerCount: 14,
-    //         address: "",
-    //         prefix: "S1",
-    //         treeRoot: "PY77CNJF6SJ3ROTROMBDRM7VYYUU5NBC",
-    //         checksum: "UM3Y"
-    //     },
-    //     {
-    //         key: "PUBLIC_KEY_2",
-    //         layerCount: 15,
-    //         address: "",
-    //         prefix: "S2",
-    //         treeRoot: "J76P4G3QFUPW4KGXAVJLGC7QAYUW4OLC",
-    //         checksum: "ED5Q"
-    //     },
-    //     {
-    //         key: "PUBLIC_KEY_3",
-    //         layerCount: 16,
-    //         address: "",
-    //         prefix: "S3",
-    //         treeRoot: "3UFRIWSOTZDVRKAD3RFX2OYNNCDOPYMJ",
-    //         checksum: "S4RL"
-    //     },
-    //     {
-    //         key: "PUBLIC_KEY_4",
-    //         layerCount: 17,
-    //         address: "",
-    //         prefix: "S4",
-    //         treeRoot: "2PONVSKDYHOJMJHIDOQRWLLXZDTAMMQX",
-    //         checksum: "YHBC"
-    //     }
-    // ];
+    it("should mark correct addresses as valid", () => {
+        let testVectors = [
+            "5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed",
+            "fB6916095ca1df60bB79Ce92cE3Ea74c37c5d359",
+            "52908400098527886E0F7030069857D2E4169EE7",
+            "27b1fdb04752bbc536007a920d24acb045561c26"
+        ];
 
-    // beforeEach(() => {
-    //     helper = new AddressHelper();
-    // });
+        for(let address of testVectors) {
+            expect(helper.isValidAddress(address).isValid).toBeTruthy(address);
+        }
+    });
 
-    // beforeEach(() => {
-    //     // Construct final template addresses
-    //     for(let templateAddress of templatePublicKeys) {
-    //         templateAddress.address = `${ templateAddress.prefix }${ templateAddress.treeRoot }${ templateAddress.checksum }`;
-    //     }
-    // });
+    it("should mark incorrect addresses as invalid", () => {
+        let testVectors: IInvalidAddressTestVector[] = [
+            // Invalid prefix
+            {
+                address: "XaAeb6053F3E94C9b9A09f33669435E7Ef1BeAed",
+                error: "prefix"
+            },
+            // Invalid checksum
+            {
+                address: "fB6916095ca1df60bB79Ce92cE3Ea74c37c5d359".toLowerCase(),
+                error: "checksum"
+            },
+            // Invalid length
+            {
+                address: "fKdjsl",
+                error: "size"
+            }
+        ];
+
+        for(let testVector of testVectors) {
+            expect(
+                helper.isValidAddress(testVector.address)
+            ).toEqual(
+                {
+                    isValid: false, 
+                    error: testVector.error
+                },
+                testVector.address
+            );
+        }
+    });
 
     // it("should generate correct addresses", () => {
     //     for(let addressTemplate of templatePublicKeys) {

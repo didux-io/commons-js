@@ -1,6 +1,6 @@
 import { CryptoHelper } from "../crypto/CryptoHelper";
 
-export declare type AddressValidationErrorType = "prefix" | "tree_root_length" | "invalid_character" | "checksum";
+export declare type AddressValidationErrorType = "prefix" | "size" | "checksum";
 
 export interface IAddressValidationResult {
     isValid: boolean;
@@ -13,9 +13,15 @@ export class AddressHelper {
     private cryptoHelper = new CryptoHelper();
 
     addressFromPublicKey(publicKey: string, addressType: AddressType): string {
-        let address = this.getAddressPrefix(addressType) + publicKey.toLowerCase();
+        let address = this.getAddressPrefix(addressType) + publicKey;
 
         address = address.substr(0, 40);
+
+        return this.applyChecksum(address);
+    }
+
+    private applyChecksum(address: string): string {
+        address = address.toLowerCase();
 
         let shaStr = this.cryptoHelper.keccak256(address);
         let sha = this.hexToBytes(shaStr);
@@ -52,41 +58,24 @@ export class AddressHelper {
 
     isValidAddress(address: string): IAddressValidationResult {
         // Check for invalid prefix
-        if(this.getLayerCount(address) == -1) {
+        if(!this.isValidPrefix(address.charAt(0))) {
             return {
                 isValid: false,
                 error: "prefix"
             };
         }
 
-        let treeRoot = address.substr(2, 32);
-
-        // Check for valid size
-        if(treeRoot.length != 32) {
+        // Check for size
+        if(address.length != 40) {
             return {
                 isValid: false,
-                error: "tree_root_length"
+                error: "size"
             };
         }
 
-        // Check for valid characters
-        let validCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-        for(let i = 0; i < 32; i++) {
-            if(validCharacters.indexOf(treeRoot[i]) == -1) {
-                return {
-                    isValid: false,
-                    error: "invalid_character"
-                };
-            }
-        }
-
-        let checksum = address.substr(34);
-        let correctEnding = this.cryptoHelper.sha256Base32Short(
-            address.substr(0, 2) + treeRoot
-        ).substr(0, 4);
-
         // Check for valid checksum
-        if(checksum != correctEnding) {
+        let lowerCaseAddress = address.toLowerCase();
+        if(this.applyChecksum(lowerCaseAddress) != address) {
             return {
                 isValid: false,
                 error: "checksum"
@@ -97,6 +86,15 @@ export class AddressHelper {
         return {
             isValid: true
         };
+    }
+
+    private isValidPrefix(prefix: string): boolean {
+        if(this.getLayerCount(prefix) != -1)
+            return true;
+        else {
+            return prefix == "e" || prefix == "f" ||
+                   prefix == "0" || prefix == "d";
+        }
     }
 
     /**
