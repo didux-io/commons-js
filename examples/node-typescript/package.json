@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "smilo-commons-js-node": "file:../../dist/node"
+    "@smilo-platform/smilo-commons-js-node": "file:../../dist/node"
   }
 }
