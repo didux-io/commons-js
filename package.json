@@ -10,7 +10,8 @@
     "tsc-worker": "tsc --p tsconfig.worker.json",
     "test": "ts-node node_modules/jasmine/bin/jasmine",
     "prepare-npm-packages": "./scripts/prepare-npm-packages.sh",
-    "publish-npm-packages": "./scripts/publish-npm-packages.sh"
+    "publish-npm-packages": "./scripts/publish-npm-packages.sh",
+    "compile-bitcoin-js-wrapper": "browserify ./bip32-wrapper/wrapper.js --standalone bitcoinjs > ./src/bip/bitcoinjs-lib.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,8 @@
   "homepage": "https://github.com/Smilo-platform/Smilo-Commons-JS#readme",
   "dependencies": {
     "big.js": "^5.1.2",
+    "bip32": "^1.0.2",
+    "browserify": "^16.2.3",
     "hi-base32": "^0.5.0",
     "js-sha3": "^0.8.0",
     "node-forge": "^0.7.6",
