@@ -9,3 +9,4 @@ dist/**/licences
 dist/**/LICENCE
 !dist/licences
 build
+src/bip/bitcoinjs-lib.js

@@ -53,6 +53,9 @@ module.exports = (env) => {
     let lamportGeneratorSourceCode = fs.readFileSync("./build/merkle/LamportGenerator.stripped.js").toString();
     let sha1PrngSourceCode = fs.readFileSync("./build/random/SHA1PRNG.stripped.js").toString();
 
+    // Read word lists
+    const englishWordList = fs.readFileSync("./bip39-wordlists/en.txt").toString();
+
     return [
         // Web
         {
@@ -74,7 +77,10 @@ module.exports = (env) => {
                     },
                     LamportGeneratorCode: lamportGeneratorSourceCode,
                     SHA1PRNGCode: sha1PrngSourceCode,
-                    ForgeCode: forgeSourceCode
+                    ForgeCode: forgeSourceCode,
+                    BIP39WordLists: {
+                        en: JSON.stringify(englishWordList)
+                    }
                 }),
                 new DtsBundlePlugin("smilo-commons-js-web", "../dist/web/smilo-web.d.ts")
             ],
@@ -107,7 +113,10 @@ module.exports = (env) => {
                     },
                     LamportGeneratorCode: lamportGeneratorSourceCode,
                     SHA1PRNGCode: sha1PrngSourceCode,
-                    ForgeCode: forgeSourceCode
+                    ForgeCode: forgeSourceCode,
+                    BIP39WordLists: {
+                        en: JSON.stringify(englishWordList)
+                    }
                 })
             ],
             output: {

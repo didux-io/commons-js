@@ -1,4 +1,4 @@
-import * as Smilo from "smilo-commons-js-node";
+import * as Smilo from "@smilo-platform/smilo-commons-js-node";
 
 let builder = new Smilo.MerkleTreeBuilder();
 
@@ -27,3 +27,16 @@ builder.generate("PRIVATE_KEY", 14, (progress) => {
         console.error(error);
     }
 );
+
+let bip39 = new Smilo.BIP39();
+
+let passphrase = bip39.generate(256);
+
+console.log("Passphrase", passphrase);
+console.log("Is valid", bip39.check(passphrase));
+
+let bip32 = new Smilo.BIP32();
+
+let privateKey = bip32.getPrivateKey(bip39.toSeed(passphrase));
+
+console.log("Private key", privateKey);

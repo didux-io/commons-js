@@ -10,3 +10,5 @@ export { MerkleLamportSigner } from "./signatures/MerkleLamportSigner";
 export { MerkleLamportVerifier } from "./signatures/MerkleLamportVerifier";
 export { TransactionHelper } from "./transactions/TransactionHelper";
 export { SHA1PRNG } from "./random/SHA1PRNG";
+export { BIP39 } from "./bip/BIP39";
+export { BIP32 } from "./bip/BIP32";
