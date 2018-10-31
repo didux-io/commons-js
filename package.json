@@ -4,6 +4,7 @@
   "description": "The Smilo Commons Javascript library exposes commonly used Smilo functionality for integration in other projects.",
   "main": "index.js",
   "scripts": {
+    "postinstall": "npm run compile-bitcoin-js-wrapper",
     "build": "webpack",
     "build-watch": "webpack --env.WATCH=true",
     "build-prod": "webpack --env.MODE=production",
