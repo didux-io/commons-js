@@ -38,4 +38,8 @@ export interface ITransaction {
      * A list of transaction outputs.
      */
     transactionOutputs: ITransactionOutput[];
+    /**
+     * Extra input data part of the transaction. This is assumed to be a hex string.
+     */
+    inputData?: string;
 }
