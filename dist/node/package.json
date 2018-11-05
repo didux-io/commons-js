@@ -1,6 +1,6 @@
 {
   "name": "@smilo-platform/smilo-commons-js-node",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Common set of Javascript functionality for the Smilo Platform.",
   "main": "smilo-node.js",
   "author": "Smilo Platform",
