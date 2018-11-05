@@ -120,7 +120,7 @@ module.exports = (env) => {
                 })
             ],
             output: {
-                libraryTarget: "umd",
+                libraryTarget: "commonjs",
                 filename: "smilo-node.js",
                 path: path.resolve(__dirname, "dist/node")
             },
