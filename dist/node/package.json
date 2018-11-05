@@ -12,5 +12,12 @@
     "blockchain",
     "merkle",
     "lamport"
-  ]
+  ],
+  "dependencies": {
+    "big.js": "^5.2.2",
+    "hi-base32": "^0.5.0",
+    "js-sha3": "^0.8.0",
+    "node-forge": "^0.7.6",
+    "threads": "^0.12.0"
+  }
 }
