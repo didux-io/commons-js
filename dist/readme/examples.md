@@ -243,6 +243,15 @@ transaction.signatureData = signer.getSignature(merkleTree, transactionHelper.tr
 transaction.signatureIndex = signatureIndex;
 ```
 
+You can also add input data to a transaction. This data will be used by smart contracts. This input data must be formatted correctly as shown in the example below.
+
+```
+var transaction = {...};
+var transactionHelper = new Smilo.TransactionHelper();
+
+transaction.inputData = transactionHelper.formatInputData("Your input data goes here");
+```
+
 ### Big Number
 
 Because Javascript numbers are not precise enough to accurately describe all transaction amounts on the Smilo blockchain we use big numbers instead.

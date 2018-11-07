@@ -1,6 +1,6 @@
 {
   "name": "@smilo-platform/smilo-commons-js-node",
-  "version": "0.1.5",
+  "version": "0.1.9",
   "description": "Common set of Javascript functionality for the Smilo Platform.",
   "main": "smilo-node.js",
   "author": "Smilo Platform",
@@ -12,5 +12,13 @@
     "blockchain",
     "merkle",
     "lamport"
-  ]
+  ],
+  "dependencies": {
+    "@types/big.js": "^4.0.5",
+    "big.js": "^5.2.2",
+    "hi-base32": "^0.5.0",
+    "js-sha3": "^0.8.0",
+    "node-forge": "^0.7.6",
+    "threads": "^0.12.0"
+  }
 }

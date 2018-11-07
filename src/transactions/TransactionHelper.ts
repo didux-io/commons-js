@@ -27,7 +27,7 @@ export class TransactionHelper {
             data += `;${ output.outputAddress };${ output.outputAmount.toBigIntegerString() }`;
         }
 
-        return `${ data };${ transaction.fee.toBigIntegerString() }`;
+        return `${ data };${ transaction.fee.toBigIntegerString() };${ transaction.inputData || ""}`;
     }
 
     /**
@@ -35,5 +35,20 @@ export class TransactionHelper {
      */
     getDataHash(transaction: ITransaction): string {
         return this.cryptoHelper.sha256Hex(this.getHashableData(transaction)).toUpperCase();
+    }
+
+    /**
+     * Formats the input data so it is rewritten as a hex string.
+     */
+    formatInputData(inputData: string): string {
+        let result = "";
+
+        for(let i = 0; i < inputData.length; i++) {
+            let charCode = inputData.charCodeAt(i);
+
+            result += charCode.toString(16);
+        }
+
+        return result;
     }
 }

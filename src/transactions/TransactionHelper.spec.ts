@@ -41,7 +41,7 @@ describe("TransactionHelper", () => {
                     }
                 ]
             },
-            expectedOutput: `1000;assetId;inputAddress;100;;outputAddress1;100;10;hash`
+            expectedOutput: `1000;assetId;inputAddress;100;;outputAddress1;100;10;;hash`
         },
         {
             transaction: {
@@ -56,9 +56,10 @@ describe("TransactionHelper", () => {
                         outputAddress: "otherOutputAddress1",
                         outputAmount: new FixedBigNumber(1000000, 0)
                     }
-                ]
+                ],
+                inputData: "INPUT_DATA"
             },
-            expectedOutput: `5000;someAssetId;otherInputAddress;1000000;;otherOutputAddress1;1000000;10000;hash`
+            expectedOutput: `5000;someAssetId;otherInputAddress;1000000;;otherOutputAddress1;1000000;10000;INPUT_DATA;hash`
         }
     ];
 
@@ -77,8 +78,8 @@ describe("TransactionHelper", () => {
                     }
                 ]
             },
-            expectedHashableData: "1000;assetId;inputAddress;100;;outputAddress1;100;10",
-            expectedDataHash: "BBFFA66F2B28D954DB2D8A37C55EC627F8014D2C1A435E88C9C86204558EDD93"
+            expectedHashableData: "1000;assetId;inputAddress;100;;outputAddress1;100;10;",
+            expectedDataHash: "C2349D948112AEEA93FC80103A64C65E9397615ACE48AB2A57A171143CAEADB3"
         }
     ];
 
@@ -105,6 +106,23 @@ describe("TransactionHelper", () => {
             let dataHash = helper.getDataHash(testVector.transaction);
 
             expect(dataHash).toBe(testVector.expectedDataHash);
+        }
+    });
+
+    it("should format input data correctly", () => {
+        let testVectors = [
+            {
+                input: "https://www.smilo.io",
+                output: "68747470733a2f2f7777772e736d696c6f2e696f"
+            },
+            {
+                input: "deploy(\"Smilo Quake Server 1\", 10, 3, 50, 25, 15, 10);",
+                output: "6465706c6f792822536d696c6f205175616b65205365727665722031222c2031302c20332c2035302c2032352c2031352c203130293b"
+            }
+        ];
+
+        for(let testVector of testVectors) {
+            expect(helper.formatInputData(testVector.input)).toBe(testVector.output);
         }
     });
 });
