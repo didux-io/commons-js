@@ -107,7 +107,10 @@ export class MerkleLamportVerifier {
         else
             combinedHashes = path[path.length - 1] + nextRoot;
 
-        let rootAddress = this.addressHelper.addressFromPublicKey(combinedHashes, <AddressType>("S" + (layerCount - 14)));
+        let rootAddress = this.addressHelper.addressFromPublicKey(
+            this.cryptoHelper.sha256Hex(combinedHashes), 
+            <AddressType>("S" + (layerCount - 13))
+        );
         return rootAddress == expectedRootAddress
     }
 }
