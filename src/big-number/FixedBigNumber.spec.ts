@@ -28,7 +28,15 @@ describe("FixedBigNumber", () => {
             },
             {
                 input: new FixedBigNumber("0.0000000000001", 13),
-                result: "00000000000001"
+                result: "1"
+            },
+            {
+                input: new FixedBigNumber("0.000000000000000001", 18),
+                result: "1"
+            },
+            {
+                input: new FixedBigNumber("0.000000000000000000", 18),
+                result: "0"
             },
             {
                 input: new FixedBigNumber("200000000", 0),

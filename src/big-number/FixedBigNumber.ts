@@ -177,7 +177,18 @@ export class FixedBigNumber {
         afterDot = FixedBigNumber.padStringEnd(afterDot, "0", this.decimals);
 
         // Merge the 'before the dot' and 'after the dot' back together (minus the dot this time)
-        return beforeDot + afterDot;
+        let result = beforeDot + afterDot;
+
+        // Remove leading zeros
+        while(true) {
+            let value = result[0];
+            if(value == "0")
+                result = result.substr(1);
+            else
+                break;
+        }
+
+        return result || "0";
     }
 
     /**
