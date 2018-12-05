@@ -59,6 +59,16 @@ describe("FixedBigNumber", () => {
                 result: new FixedBigNumber(100, 6),
                 decimals: 6,
                 input: "100000000"
+            }, 
+            {
+                result: new FixedBigNumber(0, 18),
+                decimals: 18,
+                input: "0"
+            }, 
+            {
+                result: new FixedBigNumber(0.000001, 6),
+                decimals: 6,
+                input: "1"
             },
             {
                 result: new FixedBigNumber("100.123456789", 9),
