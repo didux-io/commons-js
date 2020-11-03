@@ -1,6 +1,6 @@
-# Smilo-Commons-JS
+# Didux.io-Commons-JS
 
-The Smilo Commons Javascript library exposes commonly used Smilo functionality for integration in other projects.
+The Didux.io Commons Javascript library exposes commonly used Didux.io functionality for integration in other projects.
 
 ## Building
 

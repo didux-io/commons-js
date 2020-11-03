@@ -1,15 +1,15 @@
 <html>
     <head>
-        <title>Simple Smilo Commons JS Example</title>
+        <title>Simple Didux.io Commons JS Example</title>
 
-        <!-- <script src="smilo-web-worker.js"></script> -->
-        <script src="smilo-web.js"></script>
+        <!-- <script src="diduxio-web-worker.js"></script> -->
+        <script src="diduxio-web.js"></script>
     </head>
     <body>
         Hello World!
 
         <script>
-            let builder = new Smilo.MerkleTreeBuilder();
+            let builder = new DiduxIo.MerkleTreeBuilder();
 
             builder.generate("PRIVATE_KEY", 14, (progress) => {
                 console.log("Progress = " + Math.floor(progress * 100) + "%");
@@ -18,11 +18,11 @@
                     console.log("Done!");
 
                     // Create a signature using the Merkle Tree
-                    let signer = new Smilo.MerkleLamportSigner();
+                    let signer = new DiduxIo.MerkleLamportSigner();
 
                     let signature = signer.getSignature(merkleTree, "Hello World", "PRIVATE_KEY", 0);
 
-                    let verifier = new Smilo.MerkleLamportVerifier();
+                    let verifier = new DiduxIo.MerkleLamportVerifier();
 
                     if(verifier.verifyMerkleSignature("Hello World", signature, 0, 14, merkleTree.getPublicKey())) {
                         console.log("Signature is valid!");

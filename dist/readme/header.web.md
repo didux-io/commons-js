@@ -1,2 +1,2 @@
-# Smilo Commons JS for Web
+# DiduxIo Commons JS for Web
 

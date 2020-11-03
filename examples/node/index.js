@@ -1,6 +1,6 @@
-const Smilo = require("./smilo-node.js");
+const DiduxIo = require("./diduxio-node.js");
 
-let builder = new Smilo.MerkleTreeBuilder();
+let builder = new DiduxIo.MerkleTreeBuilder();
 
 builder.generate("PRIVATE_KEY", 14, (progress) => {
     console.log("Progress = " + Math.floor(progress * 100) + "%");
@@ -9,11 +9,11 @@ builder.generate("PRIVATE_KEY", 14, (progress) => {
         console.log("Done!");
 
         // Create a signature using the Merkle Tree
-        let signer = new Smilo.MerkleLamportSigner();
+        let signer = new DiduxIo.MerkleLamportSigner();
 
         let signature = signer.getSignature(merkleTree, "Hello World", "PRIVATE_KEY", 0);
 
-        let verifier = new Smilo.MerkleLamportVerifier();
+        let verifier = new DiduxIo.MerkleLamportVerifier();
 
         if(verifier.verifyMerkleSignature("Hello World", signature, 0, 14, merkleTree.getPublicKey())) {
             console.log("Signature is valid!");

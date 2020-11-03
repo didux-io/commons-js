@@ -1,2 +1,2 @@
-# Smilo Commons JS for Node
+# DiduxIo Commons JS for Node
 

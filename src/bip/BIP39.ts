@@ -48,7 +48,7 @@
  */
 
  /**
-  * Modified for use within Angular by the Smilo Platform B.V. team.
+  * Modified for use within Angular by the DiduxIo team.
   */
 
 const PBKDF2_ROUNDS = 2048;

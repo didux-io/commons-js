@@ -1,14 +1,14 @@
 {
-  "name": "@smilo-platform/smilo-commons-js-web",
-  "version": "0.1.13",
-  "description": "Common set of Javascript functionality for the Smilo Platform.",
-  "main": "smilo-web.js",
-  "author": "Smilo Platform",
+  "name": "@didux-io/commons-js-web",
+  "version": "0.0.1",
+  "description": "Common set of Javascript functionality for the Didux.io Platform.",
+  "main": "diduxio-web.js",
+  "author": "DiduxIo",
   "license": "Apache-2.0",
-  "typings": "smilo-web.d.ts",
+  "typings": "diduxio-web.d.ts",
   "private": false,
   "keywords": [
-    "smilo",
+    "diduxio",
     "blockchain",
     "merkle",
     "lamport"

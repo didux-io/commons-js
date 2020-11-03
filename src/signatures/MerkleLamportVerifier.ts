@@ -98,7 +98,7 @@ export class MerkleLamportVerifier {
             workingIndex >>= 1;
         }
 
-        // Convert the last public key to a Smilo address.
+        // Convert the last public key to a DiduxIo address.
         // This address should match the input address of the transaction.
         // Otherwise we know the signature is invalid.
         let combinedHashes: string;

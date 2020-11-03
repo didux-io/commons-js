@@ -1,10 +1,10 @@
 let bip32 = require("bip32");
 
-let SMILO_COIN_TYPE = 0x1991;
+let DIDUX_IO_COIN_TYPE = 0x1991;
 
 function getPrivateKeyFromSeed(seed, index, coinType) {
     index = index || 0;
-    coinType = coinType === undefined ? SMILO_COIN_TYPE : coinType;
+    coinType = coinType === undefined ? DIDUX_IO_COIN_TYPE : coinType;
 
     var root = bip32.fromSeed(Buffer.from(seed, "hex"));
 

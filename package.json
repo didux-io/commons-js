@@ -1,7 +1,7 @@
 {
-  "name": "smilo-commons-js",
-  "version": "1.0.0",
-  "description": "The Smilo Commons Javascript library exposes commonly used Smilo functionality for integration in other projects.",
+  "name": "@didux-io/commons-js",
+  "version": "0.0.1",
+  "description": "The Didux.io Commons Javascript library exposes commonly used Didux.io functionality for integration in other projects.",
   "main": "index.js",
   "scripts": {
     "postinstall": "npm run compile-bitcoin-js-wrapper",
@@ -14,16 +14,8 @@
     "publish-npm-packages": "./scripts/publish-npm-packages.sh",
     "compile-bitcoin-js-wrapper": "browserify ./bip32-wrapper/wrapper.js --standalone bitcoinjs > ./src/bip/bitcoinjs-lib.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Smilo-platform/Smilo-Commons-JS.git"
-  },
-  "author": "Smilo Platform",
+  "author": "Didux.io",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Smilo-platform/Smilo-Commons-JS/issues"
-  },
-  "homepage": "https://github.com/Smilo-platform/Smilo-Commons-JS#readme",
   "dependencies": {
     "big.js": "^5.1.2",
     "bip32": "^1.0.2",

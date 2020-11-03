@@ -3,12 +3,12 @@
 You can install this package with NPM:
 
 ```
-npm install @smilo-platform/smilo-commons-js-node
+npm install @didux-io/commons-js-node
 ```
 
 Next require the package in your project:
 
 ```
-var Smilo = require("@smilo-platform/smilo-commons-js-node");
+var DiduxIo = require("@didux-io/commons-js-node");
 ```
 

@@ -108,21 +108,4 @@ describe("TransactionHelper", () => {
             expect(dataHash).toBe(testVector.expectedDataHash);
         }
     });
-
-    it("should format input data correctly", () => {
-        let testVectors = [
-            {
-                input: "https://www.smilo.io",
-                output: "68747470733a2f2f7777772e736d696c6f2e696f"
-            },
-            {
-                input: "deploy(\"Smilo Quake Server 1\", 10, 3, 50, 25, 15, 10);",
-                output: "6465706c6f792822536d696c6f205175616b65205365727665722031222c2031302c20332c2035302c2032352c2031352c203130293b"
-            }
-        ];
-
-        for(let testVector of testVectors) {
-            expect(helper.formatInputData(testVector.input)).toBe(testVector.output);
-        }
-    });
 });

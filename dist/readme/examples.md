@@ -1,17 +1,13 @@
 ## Examples
 
-Below you will find several examples on how to use the most common functionality of the library. As part of this library we also provide a Typescript definitions file ('smilo-*.d.ts') with a more detailed description of each part of this library.
-
-### Merkle Trees
-
-The Smilo blockchain uses a Merkle Tree to sign transactions.
+Below you will find several examples on how to use the most common functionality of the library. As part of this library we also provide a Typescript definitions file ('diduxio-*.d.ts') with a more detailed description of each part of this library.
 
 #### Generating
 
 To generate a new Merkle Tree you must use the `MerkleTreeBuilder` class.
 
 ```
-var builder = new Smilo.MerkleTreeBuilder();
+var builder = new DiduxIo.MerkleTreeBuilder();
 
 var privateKey = "PRIVATE_KEY";
 var layerCount = 14;
@@ -116,7 +112,7 @@ To serialize a Merkle Tree you could do this:
 ```
 // We use the LocalStorageManager described above.
 var storageManager = new LocalStorageManager();
-var serializer = new Smilo.MerkleTreeSerializer(storageManager);
+var serializer = new DiduxIo.MerkleTreeSerializer(storageManager);
 var merkleTree = ...;
 
 serializer.serialize(merkleTree).then(
@@ -134,7 +130,7 @@ To deserialize a Merkle Tree you could do this:
 ```
 // We use the LocalStorageManager described above.
 var storageManager = new LocalStorageManager();
-var serializer = new Smilo.MerkleTreeSerializer(storageManager);
+var serializer = new DiduxIo.MerkleTreeSerializer(storageManager);
 
 serializer.serialize("path/to/merkle/tree").then(
     function(merkleTree) {
@@ -151,7 +147,7 @@ To clean a Merkle Tree from storage you could do this:
 ```
 // We use the LocalStorageManager described above.
 var storageManager = new LocalStorageManager();
-var serializer = new Smilo.MerkleTreeSerializer(storageManager);
+var serializer = new DiduxIo.MerkleTreeSerializer(storageManager);
 
 serializer.clean("path/to/merkle/tree").then(
     function() {
@@ -164,16 +160,16 @@ serializer.clean("path/to/merkle/tree").then(
 ```
 ### Signatures
 
-Every transaction on the Smilo Blockchain has to be cryptographically signed with a valid Lamport signature. Because a Lamport private key, used to create a Lamport signature, should only ever be used once we use a Merkle Tree to easily provide many private keys derived from a single root key.
+Every transaction on the Didux.io Blockchain has to be cryptographically signed with a valid Lamport signature. Because a Lamport private key, used to create a Lamport signature, should only ever be used once we use a Merkle Tree to easily provide many private keys derived from a single root key.
 
-To sign a message you therefore need a Merkle Tree. You also need to provide a signature index which specifies which private key in the Merkle Tree should be used. The Smilo Commons JS library does __not__ track which index has been used and/or is available.
+To sign a message you therefore need a Merkle Tree. You also need to provide a signature index which specifies which private key in the Merkle Tree should be used. The DiduxIo Commons JS library does __not__ track which index has been used and/or is available.
 
 #### Sign a message
 
 To sign a message use the `MerkleLamportSigner` class.
 
 ```
-var signer = new Smilo.MerkleLamportSigner();
+var signer = new DiduxIo.MerkleLamportSigner();
 
 var merkleTree = ...;           // Your Merkle Tree
 var data = "Hello World";       // Data you want to sign
@@ -190,7 +186,7 @@ The signature is a string combining the signature and the authentication path. T
 To verify a message signature use the `MerkleLamportVerifier` class.
 
 ```
-var verifier = new Smilo.MerkleLamportVerifier();
+var verifier = new DiduxIo.MerkleLamportVerifier();
 
 var data = "Hello World";       // The message
 var signature = ...;            // The signature part of the message
@@ -217,23 +213,23 @@ Note how we use the `TransactionHelper` class. This class contains several metho
 var transaction = {
     timestamp: Date().now(),
     inputAddress: "FROM_ADDRESS",                               // The address we are sending from.
-    fee: new Smilo.FixedBigNumber(0, 0),                       // The fee for the miners.
+    fee: new DiduxIo.FixedBigNumber(0, 0),                       // The fee for the miners.
     assetId: "000x0123",                                        // The asset we are sending.
-    inputAmount: new Smilo.FixedBigNumber(100, 0),             // The amount of the asset we want to send.
+    inputAmount: new DiduxIo.FixedBigNumber(100, 0),             // The amount of the asset we want to send.
     transactionOutputs: [
         {
             outputAddress: "TO_ADDRESS",                        // The address we are sending to.
-            outputAmount: new Smilo.FixedBigNumber(100, 0)     // The amount of we are sending to this address.
+            outputAmount: new DiduxIo.FixedBigNumber(100, 0)     // The amount of we are sending to this address.
         }
     ]
 };
 
 // Compute data hash for transaction
-var transactionHelper = new Smilo.TransactionHelper();
+var transactionHelper = new DiduxIo.TransactionHelper();
 transaction.dataHash = transactionHelper.getDataHash(transaction);
 
 // Sign transaction
-var signer = new Smilo.MerkleLamportSigner();
+var signer = new DiduxIo.MerkleLamportSigner();
 
 var merkleTree = ...;           // Your Merkle Tree
 var privateKey = "PRIVATE_KEY"; // Private key used to generate the Merkle Tree
@@ -247,14 +243,14 @@ You can also add input data to a transaction. This data will be used by smart co
 
 ```
 var transaction = {...};
-var transactionHelper = new Smilo.TransactionHelper();
+var transactionHelper = new DiduxIo.TransactionHelper();
 
 transaction.inputData = transactionHelper.formatInputData("Your input data goes here");
 ```
 
 ### Big Number
 
-Because Javascript numbers are not precise enough to accurately describe all transaction amounts on the Smilo blockchain we use big numbers instead.
+Because Javascript numbers are not precise enough to accurately describe all transaction amounts on the Didux blockchain we use big numbers instead.
 
 These numbers are defined with two parameters. The initial value and the amount of decimals.
 
@@ -264,20 +260,20 @@ We have defined the `FixedBigNumber` class to easily deal with big numbers.
 
 To define a `FixedBigNumber` you need to pass an initial value and the amount of decimals.
 
-__100 Smilo__
+__100 Didux__
 
-Smilo does not support fractional numbers. Therefore we set the amount of decimals to 0. Values like 0.1 can therefore never be defined.
-
-```
-var amount = new Smilo.FixedBigNumber(100, 0);
-```
-
-__100 SmiloPay__
-
-SmiloPay does support fractional numbers up to 18 decimals.
+Didux does not support fractional numbers. Therefore we set the amount of decimals to 0. Values like 0.1 can therefore never be defined.
 
 ```
-var amount = new Smilo.FixedBigNumber(100, 18);
+var amount = new DiduxIo.FixedBigNumber(100, 0);
+```
+
+__100 DiduxPay__
+
+DiduxPay does support fractional numbers up to 18 decimals.
+
+```
+var amount = new DiduxIo.FixedBigNumber(100, 18);
 ```
 
 ### Comparing big numbers
@@ -285,8 +281,8 @@ var amount = new Smilo.FixedBigNumber(100, 18);
 Big numbers can be compared against each other:
 
 ```
-var bn1 = new Smilo.FixedBigNumber(100, 18);
-var bn2 = new Smilo.FixedBigNumber(200, 18);
+var bn1 = new DiduxIo.FixedBigNumber(100, 18);
+var bn2 = new DiduxIo.FixedBigNumber(200, 18);
 
 // ==
 bn1.eq(bn2);    // false
@@ -307,7 +303,7 @@ bn1.lte(bn2);   // true
 You can also mix `FixedBigNumbers` with Javascript numbers or strings:
 
 ```
-var bn1 = new Smilo.FixedBigNumber(100, 18);
+var bn1 = new DiduxIo.FixedBigNumber(100, 18);
 
 bn1.eq(100);    // true
 
@@ -319,8 +315,8 @@ bn1.lte("90");  // false
 Basic mathematical operations can be performed on big numbers. The decimal count of the big number you call these methods on are preserved. For example if you multiply a `FixedBigNumber` with 10 decimals with another `FixedBigNumber` with 20 decimals the resulting `FixedBigNumber` will have 10 decimals.
 
 ```
-var bn1 = new Smilo.FixedBigNumber(100, 18);
-var bn2 = new Smilo.FixedBigNumber(200, 18);
+var bn1 = new DiduxIo.FixedBigNumber(100, 18);
+var bn2 = new DiduxIo.FixedBigNumber(200, 18);
 
 // Multiply
 bn1.mul(bn2);
@@ -338,9 +334,9 @@ bn1.sub(bn2);
 These operations return a new `FixedBigNumber` so the original operand remain unaltered. This also allows for chaining function calls:
 
 ```
-var bn1 = new Smilo.FixedBigNumber(100, 18);
-var bn2 = new Smilo.FixedBigNumber(200, 18);
-var bn3 = new Smilo.FixedBigNumber(300, 18);
+var bn1 = new DiduxIo.FixedBigNumber(100, 18);
+var bn2 = new DiduxIo.FixedBigNumber(200, 18);
+var bn3 = new DiduxIo.FixedBigNumber(300, 18);
 
 // (bn1 + bn2) * bn3;
 bn1.add(bn2).mul(bn3);
@@ -349,7 +345,7 @@ bn1.add(bn2).mul(bn3);
 You can also mix `FixedBigNumbers` with Javascript numbers or strings:
 
 ```
-var bn1 = new Smilo.FixedBigNumber(100, 18);
+var bn1 = new DiduxIo.FixedBigNumber(100, 18);
 
 bn1.add(10);
 
@@ -360,12 +356,12 @@ bn1.mul("100");
 
 The BIP39 standard can be used to generate mnemonic phrases which serve as a base for a private key seed.
 
-The Smilo Commons JS has integrated support for BIP39.
+The DiduxIo Commons JS has integrated support for BIP39.
 
 The example below shows how to generate a mnemonic phrase.
 
 ```
-var bip39 = new Smilo.BIP39();
+var bip39 = new DiduxIo.BIP39();
 
 var mnemonicPhrase = bip39.generate(256);
 ```
@@ -382,7 +378,7 @@ For reference the following parameters generate X amount of words:
 Given a mnemonic passphrase you can also validate its correctness:
 
 ```
-var bip39 = new Smilo.BIP39();
+var bip39 = new DiduxIo.BIP39();
 
 var phrase = ...;
 
@@ -409,7 +405,7 @@ else {
 To convert the phrase to a seed ready for a random number generator do:
 
 ```
-var bip39 = new Smilo.BIP39();
+var bip39 = new DiduxIo.BIP39();
 
 var phrase = ...;
 
@@ -424,12 +420,12 @@ The generated seed can then be used to generate a private key (see chapter `BIP3
 
 ### BIP32
 
-The BIP32 standard is used to generate a private key from a seed. The Smilo Commons JS library combines BIP32 with BIP44.
+The BIP32 standard is used to generate a private key from a seed. The DiduxIo Commons JS library combines BIP32 with BIP44.
 
 To generate a private key do:
 
 ```
-var bip32 = new Smilo.BIP32();
+var bip32 = new DiduxIo.BIP32();
 
 var privateKey = bip32.getPrivateKey("SOME_RANDOM_SEED");
 ```
@@ -439,7 +435,7 @@ This will generate a private key using the BIP32 path `m/44'/0x1991'/0'/0/0`.
 You can change the coin type and index:
 
 ```
-var bip32 = new Smilo.BIP32();
+var bip32 = new DiduxIo.BIP32();
 
 var coinType = ...;
 var index = ...;
